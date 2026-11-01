@@ -1,9 +1,8 @@
-/* dashboard.js — Home. For now: a greeting + what is coming. Games, Positions and Notes arrive in later steps. */
+/* dashboard.js — Home: greeting, progress tiles (filled when games open) and what is coming. */
 (function () {
   var $ = UI.$;
   if (!Auth.requireSession()) return;
-  Router.mountHeader();
-  Router.mountNav("dashboard");
+  Router.mountShell("dashboard");
 
   function firstName(full) { return String(full || "").trim().split(/\s+/)[0] || ""; }
 
@@ -12,6 +11,7 @@
     $("chip-class").textContent = "Class " + p.classLevel;
     if (p.section) { $("chip-section").hidden = false; $("chip-section").textContent = "Section " + p.section; }
     $("who").textContent = p.studentId;
+    Router.setUser(p);
     $("loading").hidden = true; $("home").hidden = false; $("retry").hidden = true; UI.clear($("home-msg"));
   }
 

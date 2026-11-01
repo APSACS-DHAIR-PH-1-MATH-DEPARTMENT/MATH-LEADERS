@@ -1,9 +1,8 @@
-/* profile.js — the student's own details, log out, and "Change my PIN". */
+/* profile.js — the student's own details and "Change my PIN". (Log out lives in the sidebar.) */
 (function () {
   var $ = UI.$;
   if (!Auth.requireSession()) return;
-  Router.mountHeader();
-  Router.mountNav("profile");
+  Router.mountShell("profile");
 
   function show(p) {
     $("p-id").textContent = p.studentId;
@@ -11,6 +10,7 @@
     $("p-father").textContent = p.fatherName;
     $("p-class").textContent = "Class " + p.classLevel;
     $("p-section").textContent = p.section || "—";
+    Router.setUser(p);
     $("loading").hidden = true; $("prof").hidden = false; $("retry").hidden = true; UI.clear($("prof-msg"));
   }
 
@@ -26,7 +26,6 @@
   }
   $("retry").addEventListener("click", load);
 
-  $("logout").addEventListener("click", function () { UI.busy($("logout"), true, "Logging out…"); Auth.logout(); });
   $("change-pin").addEventListener("click", function () {
     // Log out first, then open the reset-PIN screen.
     window.Api.auth.logout().catch(function () {}).then(function () {

@@ -13,34 +13,38 @@
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-<header class="header" id="app-header"></header>
-<main class="wrap">
-  <div id="loading" class="skeleton" aria-label="Loading"></div>
-  <div id="prof-msg" role="alert" hidden></div>
-  <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+<div class="shell">
+  <aside class="side" id="app-side" aria-label="Menu"></aside>
+  <div class="shell__body">
+    <header class="topbar" id="app-header"></header>
+    <main class="wrap wrap--app">
+      <div id="loading" class="skeleton" aria-label="Loading"></div>
+      <div id="prof-msg" role="alert" hidden></div>
+      <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
 
-  <div id="prof" hidden>
-    <div class="card">
-      <h2>My details</h2>
-      <dl class="kv">
-        <dt>Student ID</dt><dd class="idbox" id="p-id"></dd>
-        <dt>Name</dt><dd id="p-name"></dd>
-        <dt>Father's name</dt><dd id="p-father"></dd>
-        <dt>Class</dt><dd id="p-class"></dd>
-        <dt>Section</dt><dd id="p-section"></dd>
-      </dl>
-      <p class="small muted">Something wrong in these details? Please tell your teacher.</p>
-    </div>
+      <div id="prof" hidden>
+        <div class="card">
+          <h2>My details</h2>
+          <dl class="kv">
+            <dt>Student ID</dt><dd class="idbox" id="p-id"></dd>
+            <dt>Name</dt><dd id="p-name"></dd>
+            <dt>Father's name</dt><dd id="p-father"></dd>
+            <dt>Class</dt><dd id="p-class"></dd>
+            <dt>Section</dt><dd id="p-section"></dd>
+          </dl>
+          <p class="small muted">Something wrong in these details? Please tell your teacher.</p>
+        </div>
 
-    <div class="card">
-      <h2>Account</h2>
-      <button class="btn" id="logout" type="button">Log out</button>
-      <button class="btn btn--ghost" id="change-pin" type="button">Change my PIN</button>
-      <p class="small muted">To change the PIN we log you out and send a code to the parent email.</p>
-    </div>
+        <div class="card">
+          <h2>PIN</h2>
+          <button class="btn btn--ghost" id="change-pin" type="button">Change my PIN</button>
+          <p class="small muted">To change the PIN we log you out, then you choose a new PIN and confirm it with a code emailed to the parent.</p>
+        </div>
+      </div>
+    </main>
   </div>
-</main>
-<nav class="nav" id="app-nav" aria-label="Main"></nav>
+</div>
+<div class="scrim" id="scrim" hidden></div>
 <script src="assets/js/config.js"></script>
 <script src="assets/js/storage.js"></script>
 <script src="assets/js/ui.js"></script>
