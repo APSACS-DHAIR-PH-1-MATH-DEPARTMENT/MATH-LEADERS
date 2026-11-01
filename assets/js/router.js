@@ -13,6 +13,30 @@
 
   var activeTab = "";
 
+  /* The department's message. Shown on Home (every time it opens) and, automatically, at the bottom of
+     every other logged-in page. To change the wording, edit ONLY this block. */
+  var INITIATIVE = {
+    title: "A message from the Mathematics Department",
+    paras: [
+      "This is an initiative of Muhammad Rehan Safdar in the Mathematics Department, so that the progress of every student can be tracked and analysed properly.",
+      "As a teacher, he saw how important it is to follow each child's progress closely. This system was built so that parents and teachers can both see how every child is doing.",
+      "Thanks to Allah, whose help made it possible to build this system."
+    ]
+  };
+
+  function initiativeHtml() {
+    return '<section class="card note-card" aria-label="' + esc(INITIATIVE.title) + '"><h2>' + esc(INITIATIVE.title) + "</h2>" +
+      INITIATIVE.paras.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") + "</section>";
+  }
+
+  /* Fills <div id="initiative"> if the page has one (Home); otherwise adds the card at the end of <main>. */
+  function mountInitiative() {
+    var host = document.getElementById("initiative");
+    if (host) { host.innerHTML = initiativeHtml(); return; }
+    var main = document.querySelector("main.wrap--app");
+    if (main) { var box = document.createElement("div"); box.id = "initiative"; box.innerHTML = initiativeHtml(); main.appendChild(box); }
+  }
+
   function esc(s) { return UI.esc(s); }
 
   function navHtml() {
@@ -60,6 +84,8 @@
         '<div class="side__bottom"><button class="side__logout" id="side-logout" type="button">Log out</button></div>';
       document.getElementById("side-logout").addEventListener("click", function () { Auth.logout(); });
     }
+
+    mountInitiative();
 
     var scrim = document.getElementById("scrim");
     var menu = document.getElementById("menu-btn");

@@ -185,3 +185,9 @@ a.side__item:hover { background: rgba(255, 255, 255, .12); }
   .side { transition: none; }
   * { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Department message card (router.js INITIATIVE) */
+.note-card { border-left: 5px solid var(--gold); background: var(--gold-soft); }
+.note-card h2 { margin-top: 0; color: var(--green); }
+.note-card p { margin: 0 0 8px; }
+.note-card p:last-child { margin-bottom: 0; font-weight: 600; color: var(--green); }
