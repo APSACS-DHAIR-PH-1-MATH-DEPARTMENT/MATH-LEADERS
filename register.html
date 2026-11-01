@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Register — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<main class="wrap wrap--auth">
+  <div class="hero">
+    <img class="hero__logo" src="assets/img/logo-512.webp" width="132" height="132" alt="APSACS DHA-I R Phase 1 Mathematics Department logo">
+    <h1 class="hero__title">Register</h1>
+    <p class="hero__dept">APSACS DHA-I R Phase 1 Mathematics Department</p>
+  </div>
+
+  <div class="card" id="reg-card">
+    <p class="muted">Fill this form once. After the teacher approves it, the <b>Student ID</b> is emailed to you.</p>
+    <form id="reg-form" novalidate>
+      <label for="studentName">Student's name</label>
+      <input class="input" id="studentName" autocomplete="off" maxlength="80">
+
+      <label for="fatherName">Father's name</label>
+      <input class="input" id="fatherName" autocomplete="off" maxlength="80">
+
+      <label for="fatherOccupation">Father's occupation</label>
+      <input class="input" id="fatherOccupation" autocomplete="off" maxlength="80">
+
+      <label for="email">Email address</label>
+      <p class="hint">The Student ID and the PIN codes are sent here. Please check it carefully.</p>
+      <input class="input" id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120">
+
+      <label for="email2">Type the email address again</label>
+      <input class="input" id="email2" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="120">
+
+      <label for="classLevel">Class</label>
+      <select class="input" id="classLevel"></select>
+
+      <label for="section">Section <span class="muted">(optional)</span></label>
+      <input class="input" id="section" autocomplete="off" maxlength="4" autocapitalize="characters">
+
+      <div class="trap" aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <label class="check"><input type="checkbox" id="consent"> <span>I am the parent/guardian and I agree that the school's Mathematics Department keeps this information to track my child's progress.</span></label>
+
+      <button class="btn" id="reg-btn" type="submit">Register</button>
+    </form>
+    <div id="reg-msg" role="alert" hidden></div>
+    <p class="small muted">Already approved? <a href="login.html">Go to Log in</a>.</p>
+  </div>
+
+  <div class="card" id="done-card" hidden>
+    <h2>Registration received</h2>
+    <div id="done-msg" class="notice notice--ok"></div>
+    <p><b>What happens next</b></p>
+    <ol class="steps">
+      <li>The teacher approves your registration.</li>
+      <li>You get an email with the <b>Student ID</b>.</li>
+      <li>Open <b>Log in → First time</b>, type the Student ID, enter the code from your email and choose a 6-digit PIN.</li>
+    </ol>
+    <a class="btn btn--ghost" href="login.html">Go to Log in</a>
+  </div>
+
+  <p class="footer">© APSACS DHA-I R Phase 1 Mathematics Department</p>
+  <noscript><div class="notice notice--bad">Please turn on JavaScript to use this site.</div></noscript>
+</main>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/register.js"></script>
+</body>
+</html>

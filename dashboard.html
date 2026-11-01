@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Home — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header class="header" id="app-header"></header>
+<main class="wrap">
+  <div id="loading" class="skeleton" aria-label="Loading"></div>
+  <div id="home-msg" role="alert" hidden></div>
+  <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+
+  <div id="home" hidden>
+    <div class="card">
+      <p class="greet" id="greet"></p>
+      <p><span class="chip" id="chip-class"></span><span class="chip chip--gold" id="chip-section" hidden></span></p>
+      <p class="muted small">You are logged in as <span class="idbox" id="who"></span></p>
+    </div>
+
+    <div class="card">
+      <h2>Coming soon</h2>
+      <ul class="soon">
+        <li><span>MCQ Arena</span><span>soon</span></li>
+        <li><span>Rapid Fire</span><span>soon</span></li>
+        <li><span>Fill in the Blanks</span><span>soon</span></li>
+        <li><span>Class positions</span><span>soon</span></li>
+        <li><span>Teacher's notes</span><span>soon</span></li>
+      </ul>
+    </div>
+  </div>
+</main>
+<nav class="nav" id="app-nav" aria-label="Main"></nav>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/dashboard.js"></script>
+</body>
+</html>

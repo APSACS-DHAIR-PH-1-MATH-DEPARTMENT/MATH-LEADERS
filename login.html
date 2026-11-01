@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Log in — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<main class="wrap wrap--auth">
+  <div class="hero">
+    <img class="hero__logo" src="assets/img/logo-512.webp" width="132" height="132" alt="APSACS DHA-I R Phase 1 Mathematics Department logo">
+    <h1 class="hero__title">Math Leaders</h1>
+    <p class="hero__dept">APSACS DHA-I R Phase 1 Mathematics Department</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs" role="tablist" aria-label="What do you want to do?">
+      <button class="tab" role="tab" id="tab-login" aria-selected="true" aria-controls="panel-login" type="button">Log in</button>
+      <button class="tab" role="tab" id="tab-setpin" aria-selected="false" aria-controls="panel-pin" type="button">First time</button>
+      <button class="tab" role="tab" id="tab-resetpin" aria-selected="false" aria-controls="panel-pin" type="button">Forgot PIN</button>
+    </div>
+
+    <div id="page-msg" role="status" aria-live="polite" hidden></div>
+
+    <!-- LOG IN -->
+    <section id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+      <form id="login-form" novalidate>
+        <label for="l-id">Student ID</label>
+        <input class="input input--id" id="l-id" name="username" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="20">
+        <label for="l-pin">PIN (6 digits)</label>
+        <div class="field-row">
+          <input class="input input--pin" id="l-pin" name="password" type="password" inputmode="numeric" autocomplete="current-password" maxlength="6">
+          <button class="toggle" type="button" data-toggle-pin="l-pin" aria-pressed="false">Show</button>
+        </div>
+        <label class="check"><input type="checkbox" id="l-remember"> <span>Keep me logged in on this phone for 7 days</span></label>
+        <button class="btn" id="l-btn" type="submit">Log in</button>
+      </form>
+      <div id="login-msg" role="alert" hidden></div>
+      <p class="small muted">First time here? Use the <b>First time</b> tab. Not registered yet? <a href="register.html">Register here</a>.</p>
+    </section>
+
+    <!-- FIRST TIME / FORGOT PIN -->
+    <section id="panel-pin" role="tabpanel" hidden>
+      <h2 id="pin-title">Set your PIN</h2>
+      <p class="muted" id="pin-intro">We email a 6-digit code to the parent email given at registration. Then you choose your own 6-digit PIN.</p>
+
+      <div id="step-id">
+        <label for="p-id">Student ID</label>
+        <p class="hint">It is in the approval email sent by the school.</p>
+        <input class="input input--id" id="p-id" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20">
+        <button class="btn" id="p-send" type="button">Send me the code</button>
+      </div>
+
+      <div id="step-code" hidden>
+        <label for="p-code">6-digit code from the email</label>
+        <input class="input input--pin" id="p-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+        <label for="p-pin">Choose a PIN (6 digits)</label>
+        <div class="field-row">
+          <input class="input input--pin" id="p-pin" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6">
+          <button class="toggle" type="button" data-toggle-pin="p-pin" aria-pressed="false">Show</button>
+        </div>
+        <label for="p-pin2">Type the PIN again</label>
+        <input class="input input--pin" id="p-pin2" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6">
+        <button class="btn" id="p-save" type="button">Save my PIN</button>
+        <button class="btn btn--ghost" id="p-resend" type="button">Send the code again</button>
+      </div>
+      <div id="pin-msg" role="alert" hidden></div>
+    </section>
+  </div>
+
+  <p class="footer">© APSACS DHA-I R Phase 1 Mathematics Department</p>
+  <noscript><div class="notice notice--bad">Please turn on JavaScript to use this site.</div></noscript>
+</main>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/login.js"></script>
+</body>
+</html>

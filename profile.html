@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Profile — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header class="header" id="app-header"></header>
+<main class="wrap">
+  <div id="loading" class="skeleton" aria-label="Loading"></div>
+  <div id="prof-msg" role="alert" hidden></div>
+  <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+
+  <div id="prof" hidden>
+    <div class="card">
+      <h2>My details</h2>
+      <dl class="kv">
+        <dt>Student ID</dt><dd class="idbox" id="p-id"></dd>
+        <dt>Name</dt><dd id="p-name"></dd>
+        <dt>Father's name</dt><dd id="p-father"></dd>
+        <dt>Class</dt><dd id="p-class"></dd>
+        <dt>Section</dt><dd id="p-section"></dd>
+      </dl>
+      <p class="small muted">Something wrong in these details? Please tell your teacher.</p>
+    </div>
+
+    <div class="card">
+      <h2>Account</h2>
+      <button class="btn" id="logout" type="button">Log out</button>
+      <button class="btn btn--ghost" id="change-pin" type="button">Change my PIN</button>
+      <p class="small muted">To change the PIN we log you out and send a code to the parent email.</p>
+    </div>
+  </div>
+</main>
+<nav class="nav" id="app-nav" aria-label="Main"></nav>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/profile.js"></script>
+</body>
+</html>
