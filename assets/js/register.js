@@ -11,6 +11,8 @@
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   // Class list comes from config.js, not from the HTML.
+  $("section").innerHTML = '<option value="">Select section</option>' +
+    (CFG.SECTIONS || ["A", "B", "C"]).map(function (x) { return '<option value="' + x + '">Section ' + x + "</option>"; }).join("");
   $("classLevel").innerHTML = '<option value="">Select class</option>' +
     CFG.CLASSES.map(function (c) { return '<option value="' + UI.esc(c) + '">Class ' + UI.esc(c) + "</option>"; }).join("");
 
@@ -44,7 +46,7 @@
     if (!problem && !EMAIL_RE.test(data.email)) problem = "Please type a correct email address.";
     if (!problem && data.email !== $("email2").value.trim().toLowerCase()) problem = "The two email addresses are not the same.";
     if (!problem && CFG.CLASSES.indexOf(data.classLevel) === -1) problem = "Please select the class.";
-    if (!problem && data.section && !/^[A-Za-z0-9]{1,4}$/.test(data.section)) problem = "Section can be 1 to 4 letters or digits.";
+    if (!problem && (CFG.SECTIONS || ["A", "B", "C"]).indexOf(data.section) === -1) problem = "Please select the section.";
     if (!problem && !data.consent) problem = "Please tick the box to confirm the parent/guardian agrees.";
     if (problem) { UI.say(msg, problem, "bad"); return; }
 
