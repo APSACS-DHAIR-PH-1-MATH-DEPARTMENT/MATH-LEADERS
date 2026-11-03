@@ -9,7 +9,7 @@
 
   // Only harmless READS may be retried automatically (a cold start returns an HTML page, not JSON).
   // Login, codes, PIN and registration are NEVER retried — that could burn rate limits or double-apply.
-  var RETRYABLE = { "health": 1, "profile/me": 1 };
+  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1 };
 
   function notConfigured() {
     return !CFG || !CFG.API_BASE_URL || !CFG.API_KEY ||
@@ -89,6 +89,13 @@
       login:    function (studentId, pin, rememberMe) { return call("auth/login", { studentId: studentId, pin: pin, rememberMe: !!rememberMe }); },
       logout:   function () { return authed("auth/logout"); }
     },
-    profile: { me: function () { return authed("profile/me"); } }
+    profile: { me: function () { return authed("profile/me"); } },
+    issues: { mine: function () { return authed("issues/mine"); } },
+    feedback: {
+      submit: function (message) { return authed("feedback/submit", { message: message }); },
+      mine: function () { return authed("feedback/mine"); },
+      approved: function () { return authed("feedback/approved"); },
+      publicList: function () { return call("feedback/public"); }   // no login needed: first name + class only
+    }
   };
 })();

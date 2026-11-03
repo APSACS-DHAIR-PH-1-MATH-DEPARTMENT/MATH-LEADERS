@@ -5,6 +5,8 @@
 (function () {
   var TABS = [
     { id: "dashboard", label: "Home",              icon: "🏠", href: "dashboard.html", ready: true },
+    { id: "issues",    label: "Disciplinary issues", icon: "📋", href: "issues.html",  ready: true },
+    { id: "feedback",  label: "Feedback",          icon: "💬", href: "feedback.html",  ready: true },
     { id: "games",     label: "Games",             icon: "🎮", href: "games.html",     ready: false },
     { id: "positions", label: "Positions",         icon: "🏆", href: "positions.html", ready: false },
     { id: "remarks",   label: "Teacher's notes",   icon: "📝", href: "remarks.html",   ready: false },
@@ -15,14 +17,7 @@
 
   /* The department's message. Shown on Home (every time it opens) and, automatically, at the bottom of
      every other logged-in page. To change the wording, edit ONLY this block. */
-  var INITIATIVE = {
-    title: "A message from the Mathematics Department",
-    paras: [
-      "This is an initiative of Muhammad Rehan Safdar in the Mathematics Department, so that the progress of every student can be tracked and analysed properly.",
-      "As a teacher, he saw how important it is to follow each child's progress closely. This system was built so that parents and teachers can both see how every child is doing.",
-      "Thanks to Allah, whose help made it possible to build this system."
-    ]
-  };
+  var INITIATIVE = window.Initiative;   // the wording lives in initiative.js (one copy for the whole site)
 
   function initiativeHtml() {
     return '<section class="card note-card" aria-label="' + esc(INITIATIVE.title) + '"><h2>' + esc(INITIATIVE.title) + "</h2>" +

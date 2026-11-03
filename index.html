@@ -7,17 +7,86 @@
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#14532d">
   <title>Math Leaders — APSACS DHA-I R Phase 1 Mathematics Department</title>
+  <meta name="description" content="Math Leaders: track every student's progress in Mathematics. APSACS DHA-I R Phase 1 Mathematics Department.">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="icon" href="assets/img/favicon.ico">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-<main class="wrap wrap--auth">
-  <p class="muted" id="redirecting">Opening Math Leaders…</p>
-  <noscript><div class="notice notice--bad">Please turn on JavaScript to use this site.</div></noscript>
+<body data-page="home">
+<header id="site-nav"></header>
+
+<section class="landing-hero">
+  <div class="container landing-hero__inner">
+    <img class="landing-hero__logo" src="assets/img/logo-512.webp" width="150" height="150" alt="APSACS DHA-I R Phase 1 Mathematics Department logo">
+    <h1 class="landing-hero__title">Math Leaders</h1>
+    <p class="landing-hero__dept">APSACS DHA-I R Phase 1 Mathematics Department</p>
+    <p class="landing-hero__tag">Following every child's progress in Mathematics — clearly, for students, parents and teachers.</p>
+    <div class="landing-hero__cta">
+      <a class="btn btn--gold" id="cta-login" href="login.html">Log in</a>
+      <a class="btn btn--ghost btn--onhero" id="cta-register" href="register.html">Register your child</a>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="section" id="about" aria-labelledby="about-h">
+    <div class="container">
+      <h2 class="section__title" id="about-h">About this initiative</h2>
+      <div id="initiative"></div>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="features" aria-labelledby="features-h">
+    <div class="container">
+      <h2 class="section__title" id="features-h">What you get</h2>
+      <div class="featuregrid">
+        <article class="feature"><span class="feature__ico" aria-hidden="true">📋</span><h3>Disciplinary record</h3><p>Parents and students can see every issue a teacher noted, when it happened, and what the teacher or school did about it.</p><span class="feature__tag feature__tag--live">Available</span></article>
+        <article class="feature"><span class="feature__ico" aria-hidden="true">💬</span><h3>Feedback</h3><p>Students can tell the department what they think. Approved messages are shared with everyone.</p><span class="feature__tag feature__tag--live">Available</span></article>
+        <article class="feature"><span class="feature__ico" aria-hidden="true">🎯</span><h3>Maths games</h3><p>MCQ Arena, Rapid Fire and Fill in the Blanks — practise chapter by chapter and earn XP.</p><span class="feature__tag">Coming soon</span></article>
+        <article class="feature"><span class="feature__ico" aria-hidden="true">🏆</span><h3>Class positions</h3><p>See where you stand in your class, based on the points you earn.</p><span class="feature__tag">Coming soon</span></article>
+        <article class="feature"><span class="feature__ico" aria-hidden="true">📝</span><h3>Teacher's notes</h3><p>Revision remarks from your teacher, kept in one place.</p><span class="feature__tag">Coming soon</span></article>
+        <article class="feature"><span class="feature__ico" aria-hidden="true">🔒</span><h3>Private and safe</h3><p>Each child has their own Student ID and secret PIN. Parents confirm by email.</p><span class="feature__tag feature__tag--live">Available</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how" aria-labelledby="how-h">
+    <div class="container">
+      <h2 class="section__title" id="how-h">How to start</h2>
+      <ol class="stepcards">
+        <li class="stepcard"><span class="stepcard__n">1</span><div><h3>Register</h3><p>A parent fills in the short form with the child's name, class and section.</p></div></li>
+        <li class="stepcard"><span class="stepcard__n">2</span><div><h3>Wait for approval</h3><p>The teacher approves it and the Student ID is emailed to the parent.</p></div></li>
+        <li class="stepcard"><span class="stepcard__n">3</span><div><h3>Set a PIN and log in</h3><p>Use the First time tab on the login page to choose a 6-digit PIN.</p></div></li>
+      </ol>
+      <p class="center"><a class="btn btn--small" href="register.html">Register</a> <a class="btn btn--small btn--ghost" href="login.html">Log in</a></p>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="voices" aria-labelledby="voices-h" hidden>
+    <div class="container">
+      <h2 class="section__title" id="voices-h">What students say</h2>
+      <div class="voices" id="voices-list"></div>
+    </div>
+  </section>
 </main>
+
+<footer class="sitefooter">
+  <div class="container">
+    <img src="assets/img/logo-128.webp" width="48" height="48" alt="">
+    <p><b>APSACS DHA-I R Phase 1 Mathematics Department</b><br>Built by M. Rehan Safdar</p>
+    <p class="small"><a href="index.html">Home</a> · <a href="register.html">Register</a> · <a href="login.html">Log in</a></p>
+    <p class="small">© APSACS DHA-I R Phase 1 Mathematics Department</p>
+  </div>
+</footer>
+<noscript><div class="notice notice--bad">Please turn on JavaScript to use this site.</div></noscript>
+<script src="assets/js/config.js"></script>
 <script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/initiative.js"></script>
+<script src="assets/js/datetime.js"></script>
+<script src="assets/js/sitenav.js"></script>
 <script src="assets/js/index.js"></script>
 </body>
 </html>
