@@ -17,7 +17,7 @@
   if (!wantedMode && Storage.getToken()) { location.replace("dashboard.html"); return; }
 
   UI.wirePinToggles(document);
-  ["l-pin", "p-code", "p-pin", "p-pin2"].forEach(function (id) { UI.digitsOnly($(id)); });
+  ["p-code"].forEach(function (id) { UI.digitsOnly($(id)); });
 
   if (/[?&]expired=1/.test(params)) UI.say($("page-msg"), "Your session ended. Please log in again.", "info");
   if (/[?&]inactive=1/.test(params)) UI.say($("page-msg"), "This account is not active. Please contact your teacher.", "bad");
@@ -36,11 +36,11 @@
     $("panel-pin").hidden = mode === "login";
     UI.clear($("login-msg")); UI.clear($("pin-msg")); UI.clear($("page-msg"));
     if (mode === "setpin") {
-      $("pin-title").textContent = "Set your PIN";
-      $("pin-intro").textContent = "Choose your own 6-digit PIN. Then we email a 6-digit code to the parent to confirm it.";
+      $("pin-title").textContent = "Set your password";
+      $("pin-intro").textContent = "Choose your own password. Then we email a 6-digit code to the parent to confirm it.";
     } else if (mode === "resetpin") {
-      $("pin-title").textContent = "Forgot your PIN?";
-      $("pin-intro").textContent = "No problem. Choose a new 6-digit PIN. Then we email a 6-digit code to the parent to confirm it.";
+      $("pin-title").textContent = "Forgot your password?";
+      $("pin-intro").textContent = "No problem. Choose a new password. Then we email a 6-digit code to the parent to confirm it.";
     }
     if (mode !== "login") showStepA();
     var first = mode === "login" ? $("l-id") : ($("p-id").value ? $("p-pin") : $("p-id"));
@@ -57,7 +57,7 @@
     var id = $("l-id").value, pin = $("l-pin").value, msg = $("login-msg");
     UI.clear(msg);
     if (!Auth.isValidStudentId(id)) return UI.say(msg, "Please type your Student ID exactly as in the school's email (it looks like WHA-STU- and 7 digits).", "bad");
-    var rule = Auth.pinRuleError(pin);
+    var rule = Auth.loginSecretError(pin);
     if (rule) return UI.say(msg, rule, "bad");
 
     UI.busy($("l-btn"), true, "Logging in…");
@@ -91,7 +91,7 @@
       if (!Auth.isValidStudentId(id)) return UI.say(msg, "Please type your Student ID exactly as in the school's email (WHA-STU- and 7 digits).", "bad");
       var rule = Auth.pinRuleError(pin);
       if (rule) return UI.say(msg, rule, "bad");
-      if (pin !== pin2) return UI.say(msg, "The two PINs are not the same. Please type them again.", "bad");
+      if (pin !== pin2) return UI.say(msg, "The two passwords are not the same. Please type them again.", "bad");
       held.id = Auth.normalizeId(id); held.pin = pin;
     }
     var btn = fromStepA ? $("p-send") : $("p-resend");
@@ -113,7 +113,7 @@
     var msg = $("pin-msg"), code = $("p-code").value;
     UI.clear(msg);
     if (!/^\d{6}$/.test(code)) return UI.say(msg, "The code from the email is 6 digits.", "bad");
-    if (!held.id || !held.pin) { showStepA(); return UI.say(msg, "Please type the Student ID and PIN again.", "bad"); }
+    if (!held.id || !held.pin) { showStepA(); return UI.say(msg, "Please type the Student ID and password again.", "bad"); }
 
     var btn = $("p-save");
     UI.busy(btn, true, "Saving…");
@@ -125,7 +125,7 @@
       held.pin = ""; $("p-pin").value = ""; $("p-pin2").value = ""; $("p-code").value = "";
       setMode("login");
       $("l-id").value = id;
-      UI.say($("login-msg"), "Your PIN is saved. Now log in with your Student ID and PIN.", "ok");
+      UI.say($("login-msg"), "Your password is saved. Now log in with your Student ID and password.", "ok");
       $("l-pin").focus();
     }).catch(function (e) { UI.busy(btn, false); UI.say(msg, e.message, "bad"); });
   });

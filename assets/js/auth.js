@@ -6,10 +6,21 @@
   function normalizeId(raw) { return String(raw || "").replace(/\s+/g, "").toUpperCase(); }
   function isValidStudentId(id) { return ID_RE.test(normalizeId(id)); }
 
-  function pinRuleError(pin) {
-    var p = String(pin || "");
-    if (!/^\d{6}$/.test(p)) return "The PIN must be exactly 6 digits.";
-    if (/^(\d)\1{5}$/.test(p)) return "The PIN cannot be one digit repeated (like 111111).";
+  // Rules for a NEW password (first time / forgot). Same rules as the server.
+  function pinRuleError(pw) {
+    var p = String(pw || "");
+    if (p.length < 8 || p.length > 16) return "The password must be 8 to 16 characters long.";
+    if (!/^[\x21-\x7E]+$/.test(p)) return "Use only letters, numbers and symbols from the keyboard (no spaces).";
+    if (!/[A-Z]/.test(p)) return "The password needs at least one capital letter.";
+    if (!/[a-z]/.test(p)) return "The password needs at least one small letter.";
+    if (!/[0-9]/.test(p)) return "The password needs at least one number.";
+    if (!/[^A-Za-z0-9]/.test(p)) return "The password needs at least one special character, like ! @ # $ %.";
+    return null;
+  }
+  // Logging in: old 6-digit PINs and new passwords are both accepted, the server checks the match.
+  function loginSecretError(pw) {
+    var p = String(pw || "");
+    if (p.length < 6 || p.length > 16) return "Please type your password.";
     return null;
   }
 
@@ -37,5 +48,5 @@
     return true;
   }
 
-  window.Auth = { normalizeId: normalizeId, isValidStudentId: isValidStudentId, pinRuleError: pinRuleError, login: login, logout: logout, requireSession: requireSession };
+  window.Auth = { normalizeId: normalizeId, isValidStudentId: isValidStudentId, pinRuleError: pinRuleError, loginSecretError: loginSecretError, login: login, logout: logout, requireSession: requireSession };
 })();

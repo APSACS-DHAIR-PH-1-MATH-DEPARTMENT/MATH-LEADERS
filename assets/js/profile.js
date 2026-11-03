@@ -1,4 +1,4 @@
-/* profile.js — the student's own details and "Change my PIN". (Log out lives in the sidebar.) */
+/* profile.js — the student's own details and "Change my password". (Log out lives in the sidebar.) */
 (function () {
   var $ = UI.$;
   if (!Auth.requireSession()) return;

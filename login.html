@@ -25,7 +25,7 @@
     <div class="tabs" role="tablist" aria-label="What do you want to do?">
       <button class="tab" role="tab" id="tab-login" aria-selected="true" aria-controls="panel-login" type="button">Log in</button>
       <button class="tab" role="tab" id="tab-setpin" aria-selected="false" aria-controls="panel-pin" type="button">First time</button>
-      <button class="tab" role="tab" id="tab-resetpin" aria-selected="false" aria-controls="panel-pin" type="button">Forgot PIN</button>
+      <button class="tab" role="tab" id="tab-resetpin" aria-selected="false" aria-controls="panel-pin" type="button">Forgot password</button>
     </div>
 
     <div id="page-msg" role="status" aria-live="polite" hidden></div>
@@ -35,9 +35,9 @@
       <form id="login-form" novalidate>
         <label for="l-id">Student ID</label>
         <input class="input input--id" id="l-id" name="username" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="20">
-        <label for="l-pin">PIN (6 digits)</label>
+        <label for="l-pin">Password</label>
         <div class="field-row">
-          <input class="input input--pin" id="l-pin" name="password" type="password" inputmode="numeric" autocomplete="current-password" maxlength="6">
+          <input class="input input--pin" id="l-pin" name="password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false" maxlength="16">
           <button class="toggle" type="button" data-toggle-pin="l-pin" aria-pressed="false">Show</button>
         </div>
         <label class="check"><input type="checkbox" id="l-remember"> <span>Keep me logged in on this phone for 7 days</span></label>
@@ -47,21 +47,22 @@
       <p class="small muted">First time here? Use the <b>First time</b> tab. Not registered yet? <a href="register.html">Register here</a>.</p>
     </section>
 
-    <!-- FIRST TIME / FORGOT PIN: step A = ID + PIN, step B = code from the email -->
+    <!-- FIRST TIME / FORGOT PASSWORD: step A = ID + password, step B = code from the email -->
     <section id="panel-pin" role="tabpanel" hidden>
-      <h2 id="pin-title">Set your PIN</h2>
-      <p class="muted" id="pin-intro">Choose your own 6-digit PIN. Then we email a 6-digit code to the parent to confirm it.</p>
+      <h2 id="pin-title">Set your password</h2>
+      <p class="muted" id="pin-intro">Choose your own password. Then we email a 6-digit code to the parent to confirm it.</p>
 
       <div id="step-pin">
         <label for="p-id">Student ID</label>
         <input class="input input--id" id="p-id" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20">
-        <label for="p-pin">Choose a PIN (6 digits)</label>
+        <label for="p-pin">Choose a password (8 to 16 characters)</label>
         <div class="field-row">
-          <input class="input input--pin" id="p-pin" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6">
+          <input class="input input--pin" id="p-pin" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" maxlength="16">
           <button class="toggle" type="button" data-toggle-pin="p-pin" aria-pressed="false">Show</button>
         </div>
-        <label for="p-pin2">Type the PIN again</label>
-        <input class="input input--pin" id="p-pin2" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6">
+        <ul class="small muted" id="pw-rules"><li>8 to 16 characters</li><li>At least one capital letter (A-Z) and one small letter (a-z)</li><li>At least one number (0-9)</li><li>At least one special character, like ! @ # $ %</li></ul>
+        <label for="p-pin2">Type the password again</label>
+        <input class="input input--pin" id="p-pin2" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" maxlength="16">
         <button class="btn" id="p-send" type="button">Continue — email me a code</button>
       </div>
 
@@ -69,9 +70,9 @@
         <div class="notice notice--info" id="code-note"></div>
         <label for="p-code">6-digit code from the email</label>
         <input class="input input--pin" id="p-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
-        <button class="btn" id="p-save" type="button">Confirm and save my PIN</button>
+        <button class="btn" id="p-save" type="button">Confirm and save my password</button>
         <button class="btn btn--ghost" id="p-resend" type="button">Send the code again</button>
-        <button class="linkbtn" id="p-back" type="button">← Change the Student ID or PIN</button>
+        <button class="linkbtn" id="p-back" type="button">← Change the Student ID or password</button>
       </div>
       <div id="pin-msg" role="alert" hidden></div>
     </section>
