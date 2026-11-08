@@ -5,6 +5,7 @@
 (function () {
   var TABS = [
     { id: "dashboard", label: "Home",              icon: "🏠", href: "dashboard.html", ready: true },
+    { id: "tests",     label: "Tests",             icon: "🎯", href: "tests.html",     ready: true },
     { id: "issues",    label: "Disciplinary issues", icon: "📋", href: "issues.html",  ready: true },
     { id: "feedback",  label: "Feedback",          icon: "💬", href: "feedback.html",  ready: true },
     { id: "games",     label: "Games",             icon: "🎮", href: "games.html",     ready: false },
@@ -26,6 +27,7 @@
 
   /* Fills <div id="initiative"> if the page has one (Home); otherwise adds the card at the end of <main>. */
   function mountInitiative() {
+    if (!INITIATIVE) return;   // a page that does not load initiative.js (the test page) shows no message, so nothing distracts a child during a test
     var host = document.getElementById("initiative");
     if (host) { host.innerHTML = initiativeHtml(); return; }
     var main = document.querySelector("main.wrap--app");

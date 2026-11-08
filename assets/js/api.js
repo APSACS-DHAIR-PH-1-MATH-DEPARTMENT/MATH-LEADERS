@@ -9,7 +9,7 @@
 
   // Only harmless READS may be retried automatically (a cold start returns an HTML page, not JSON).
   // Login, codes, PIN and registration are NEVER retried — that could burn rate limits or double-apply.
-  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1 };
+  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1, "assessments/mine": 1, "assessments/result": 1 };
 
   function notConfigured() {
     return !CFG || !CFG.API_BASE_URL || !CFG.API_KEY ||
@@ -91,6 +91,13 @@
     },
     profile: { me: function () { return authed("profile/me"); } },
     issues: { mine: function () { return authed("issues/mine"); } },
+    // Stage 7: diagnostic tests. start/submit are never retried automatically (submit is safe to repeat BY HAND: the server ignores a second one).
+    assessments: {
+      mine: function () { return authed("assessments/mine"); },
+      start: function (assessmentId) { return authed("assessments/start", { assessmentId: assessmentId }); },
+      submit: function (attemptId, answers) { return authed("assessments/submit", { attemptId: attemptId, answers: answers }); },
+      result: function (attemptId) { return authed("assessments/result", { attemptId: attemptId }); }
+    },
     feedback: {
       submit: function (message) { return authed("feedback/submit", { message: message }); },
       mine: function () { return authed("feedback/mine"); },

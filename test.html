@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Test — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="app-side" aria-label="Menu"></aside>
+  <div class="shell__body">
+    <header class="topbar" id="app-header"></header>
+    <main class="wrap wrap--app">
+      <div id="loading" class="skeleton" aria-label="Loading"></div>
+      <div id="page-msg" role="alert" hidden></div>
+      <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+
+      <!-- 1. before the test -->
+      <section id="v-intro" hidden>
+        <div class="card">
+          <h1 id="i-title">Test</h1>
+          <p class="muted" id="i-chapter"></p>
+          <div class="test__facts" id="i-facts"></div>
+          <p class="small muted" id="i-topics"></p>
+        </div>
+        <div class="card">
+          <h2>Before you start</h2>
+          <ul class="steps">
+            <li>The clock starts when you press <b>Start</b> and <b>does not stop</b>, even if you close this page.</li>
+            <li>You can move between questions and change an answer until you submit.</li>
+            <li>When the time is up the test is submitted for you.</li>
+            <li id="i-attempts"></li>
+            <li>You will not see which answers are right until you submit. After that you see every explanation.</li>
+          </ul>
+          <div id="i-msg" role="alert" hidden></div>
+          <button class="btn" id="i-start" type="button">Start test</button>
+          <a class="btn btn--ghost" href="tests.html">Back to tests</a>
+        </div>
+      </section>
+
+      <!-- 2. answering -->
+      <section id="v-run" hidden>
+        <div class="runbar" id="runbar">
+          <div class="runbar__row">
+            <div class="runbar__q" id="r-count" aria-live="polite">Question 1 of 1</div>
+            <div class="timer" id="r-timer" role="timer" aria-live="off">⏱ --:--</div>
+          </div>
+          <div class="progress" aria-hidden="true"><div class="progress__fill" id="r-fill"></div></div>
+          <div class="small muted" id="r-answered"></div>
+        </div>
+        <div id="timer-note" role="status" aria-live="assertive" hidden></div>
+        <div class="card qcard">
+          <div class="qcard__chips"><span class="chip" id="q-topic"></span><span class="chip chip--diff" id="q-diff"></span></div>
+          <div class="qtext" id="q-text"></div>
+          <div id="q-answer" class="qanswer"></div>
+          <button class="linkbtn" id="q-clear" type="button" hidden>Clear my answer</button>
+        </div>
+        <div class="navrow">
+          <button class="btn btn--ghost" id="r-prev" type="button">← Back</button>
+          <button class="btn" id="r-next" type="button">Next →</button>
+        </div>
+        <button class="linkbtn" id="r-grid-toggle" type="button" aria-expanded="false">Show all questions</button>
+        <div class="grid" id="r-grid" hidden></div>
+      </section>
+
+      <!-- 3. review before handing in -->
+      <section id="v-review" hidden>
+        <div class="card">
+          <h2>Ready to hand in?</h2>
+          <p id="rv-summary"></p>
+          <div id="rv-missing" class="grid"></div>
+          <div id="rv-msg" role="alert" hidden></div>
+          <button class="btn" id="rv-submit" type="button">Submit my test</button>
+          <button class="btn btn--ghost" id="rv-back" type="button">Go back to questions</button>
+        </div>
+      </section>
+
+      <!-- 4. result -->
+      <section id="v-result" hidden>
+        <div class="card result" id="res-card"></div>
+        <div id="res-more" hidden>
+          <div class="card"><h2>Your topics</h2><div id="res-topics"></div></div>
+          <div class="card" id="res-diff-card"><h2>By difficulty</h2><div id="res-diff"></div></div>
+          <div class="card"><h2>What to practise next</h2><ul class="advice" id="res-advice"></ul></div>
+          <div class="card">
+            <h2>Your answers</h2>
+            <div class="filters" id="res-filters">
+              <button class="chipbtn is-on" type="button" data-f="all">All</button>
+              <button class="chipbtn" type="button" data-f="wrong">Wrong</button>
+              <button class="chipbtn" type="button" data-f="blank">Not answered</button>
+            </div>
+            <div id="res-answers" class="answers"></div>
+          </div>
+        </div>
+        <a class="btn btn--ghost" href="tests.html">Back to tests</a>
+      </section>
+    </main>
+  </div>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+<script src="assets/vendor/katex/katex.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/datetime.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/tex.js"></script>
+<script src="assets/js/test.js"></script>
+</body>
+</html>
