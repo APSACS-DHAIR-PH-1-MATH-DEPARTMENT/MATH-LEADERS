@@ -71,7 +71,7 @@
       r.assessments.forEach(function (t) { list.appendChild(card(t)); });
       $("none-card").hidden = r.assessments.length > 0;
       $("loading").hidden = true; $("tests-wrap").hidden = false;
-    }).catch(function (e) { $("loading").hidden = true; UI.say($("page-msg"), e.message, "bad"); $("retry").hidden = false; });
+    }).catch(function (e) { $("loading").hidden = true; UI.say($("page-msg"), /was not found/.test(e.message || "") ? "Tests are not switched on yet. Please try again later or tell your teacher." : e.message, "bad"); $("retry").hidden = false; });
   }
   $("retry").addEventListener("click", load);
   var cached = Storage.getProfile(); if (cached) Router.setUser(cached);
