@@ -178,7 +178,7 @@
     flushTime();
     S.idx = i; S.enter = Date.now(); save();
     var q = S.qs[i];
-    $("q-topic").textContent = q.topic;
+    $("q-topic").textContent = q.topic; $("q-id").textContent = q.questionId;   /* build 10: question number for quoting to the teacher */
     var d = $("q-diff"); d.textContent = DIFF[q.difficulty] || q.difficulty; d.className = "chip chip--diff chip--" + q.difficulty;
     TeX.set($("q-text"), q.question);
     var box = $("q-answer");
@@ -274,6 +274,7 @@
     top.appendChild(h("span", "ans__n", "Q" + (i + 1)));
     top.appendChild(h("span", "ans__s", kind === "right" ? "✓ Correct" : (kind === "wrong" ? "✗ Not correct" : "— Not answered")));
     top.appendChild(h("span", "chip", a.topic));
+    if (a.questionId) top.appendChild(h("span", "chip chip--id", a.questionId));
     c.appendChild(top);
     c.appendChild(tex("div", "qtext qtext--sm", a.question || ""));
     var yours = h("div", "ans__line"); yours.appendChild(h("b", "", "Your answer: "));

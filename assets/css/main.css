@@ -394,3 +394,6 @@ a.side__item:hover { background: rgba(255, 255, 255, .12); }
 .lightbox__img { width: min(86vw, 420px); height: auto; aspect-ratio: 1 / 1; background: #fff; border-radius: 50%; padding: 8px; box-shadow: 0 10px 40px rgba(0, 0, 0, .45); }
 .lightbox__hint { color: #e8f3ec; font-size: .9rem; }
 body.lightbox-open { overflow: hidden; }
+
+/* build 10: small question-ID chip on every test question */
+.chip--id { background: #eef1f4; color: #4b5563; font-weight: 600; font-size: .74rem; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
