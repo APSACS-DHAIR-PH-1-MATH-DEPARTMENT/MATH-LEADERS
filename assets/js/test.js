@@ -284,6 +284,7 @@
   }
   function plain(s) { return String(s == null ? "" : s).replace(/\|/g, " , "); }
 
+  var lastAttemptId = "";
   function answerCard(a, i) {
     var kind, label;
     if (a.pending) { kind = "pending"; label = "⏳ Waiting for your teacher to mark"; }
@@ -298,6 +299,7 @@
     top.appendChild(h("span", "ans__n", "Q" + (i + 1)));
     top.appendChild(h("span", "ans__s", label));
     if (a.manual || a.marks > 1) top.appendChild(h("span", "chip chip--marks", (a.pending ? "" : a.marksAwarded + " / ") + a.marks + (a.marks === 1 ? " mark" : " marks")));
+    if (a.adjusted) top.appendChild(h("span", "chip chip--marks", "Mark changed by your teacher: " + a.marksAwarded + " / " + a.marks));
     top.appendChild(h("span", "chip", a.topic));
     if (a.questionId) top.appendChild(h("span", "chip chip--id", a.questionId));
     c.appendChild(top);
@@ -312,6 +314,7 @@
       c.appendChild(right);
     }
     if (a.explanation) { var ex = h("div", "ans__why"); ex.appendChild(h("b", "", "Why: ")); ex.appendChild(tex("span", "", a.explanation)); c.appendChild(ex); }
+    if (window.Ask) c.appendChild(Ask.helpButton(a, lastAttemptId));
     return c;
   }
 
@@ -328,6 +331,7 @@
       $("res-more").hidden = true; show("v-result"); return;
     }
     var at = res.attempt, p = at.scorePct, waiting = at.pendingCount || 0;
+    lastAttemptId = res.attemptId;
     var useMarks = at.marksTotal !== at.total || res.answers.some(function (x) { return x.manual; });
     var head = waiting ? "Test handed in" : (p >= 80 ? "Excellent work!" : (p >= 60 ? "Good effort!" : (p >= 40 ? "Keep practising" : "Let's work on this together")));
     var headIcon = waiting ? "thumb" : (p >= 80 ? "star" : (p >= 60 ? "thumb" : (p >= 40 ? "trend" : "heart")));
@@ -339,6 +343,7 @@
     big.appendChild(h("span", "result__n", useMarks ? at.marksObtained + " / " + at.marksTotal + " marks" : at.correct + " / " + at.total));
     big.appendChild(h("span", "result__p", p + "%" + (waiting ? " so far" : "")));
     c.appendChild(big);
+    if (at.originalScorePct !== null && at.originalScorePct !== undefined) c.appendChild(h("p", "notice notice--info", "After a recheck your teacher changed some marks. Your first score was " + at.originalMarksObtained + " / " + at.marksTotal + " (" + at.originalScorePct + "%); now it is " + at.marksObtained + " / " + at.marksTotal + " (" + p + "%)."));
     if (waiting) c.appendChild(h("p", "notice notice--info", "⏳ " + waiting + " written answer" + (waiting === 1 ? " is" : "s are") + " waiting for your teacher to mark. The marks above count only what is already marked. Open this result again later to see your final score."));
     var meta = at.answered < at.total ? (at.total - at.answered) + " question(s) were not answered. " : "";
     c.appendChild(h("p", "muted", meta + "Time used: " + fmt(at.timeUsedSec) + (res.late ? " · submitted just after the time limit" : "")));
@@ -351,6 +356,7 @@
     res.advice.forEach(function (x) { var li = h("li"); li.appendChild(h("b", "", x.title)); li.appendChild(h("div", "small", x.text)); ad.appendChild(li); });
     var list = $("res-answers"); list.textContent = "";
     res.answers.forEach(function (a, i) { list.appendChild(answerCard(a, i)); });
+    var rc = $("res-recheck"); rc.textContent = ""; if (window.Ask) rc.appendChild(Ask.recheckCard(res));
     applyFilter("all");
     $("res-more").hidden = false;
     show("v-result");

@@ -27,6 +27,17 @@
         $("retry").hidden = false;
       });
   }
+  /* replies from the teacher that the student has not read yet (quiet: a failure here changes nothing) */
+  function replies() {
+    Api.requests.mine().then(function (r) {
+      var n = $("reply-note"); if (!n) return;
+      n.textContent = "";
+      if (!r.unread) { n.hidden = true; return; }
+      n.appendChild(document.createTextNode("You have " + r.unread + " new repl" + (r.unread === 1 ? "y" : "ies") + " from your teacher. "));
+      var a = document.createElement("a"); a.href = "help.html"; a.textContent = "Read now"; n.appendChild(a);
+      n.hidden = false;
+    }).catch(function () { /* ignore */ });
+  }
   $("retry").addEventListener("click", load);
-  load();
+  load(); replies();
 })();

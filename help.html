@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Help &amp; requests — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="app-side" aria-label="Menu"></aside>
+  <div class="shell__body">
+    <header class="topbar" id="app-header"></header>
+    <main class="wrap wrap--app">
+      <div id="loading" class="skeleton" aria-label="Loading"></div>
+      <div id="page-msg" role="alert" hidden></div>
+      <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+      <div id="help-wrap" hidden>
+        <div class="card">
+          <h1>Help &amp; requests</h1>
+          <p class="muted">Did not understand a question? Ask your teacher. You can also ask for a recheck of a test result (open the result of the test and use “Ask for a recheck”). Replies appear here.</p>
+        </div>
+        <form class="card" id="ask-form" novalidate>
+          <h2>Samajh nahi aya?</h2>
+          <p class="hint">Type the question ID exactly as it is shown on the question (for example <b>T000012-003</b>), then say what you did not understand. You can also tap “Samajh nahi aya?” under any question in a test result.</p>
+          <label for="a-qid">Question ID</label>
+          <input class="input" id="a-qid" maxlength="30" autocomplete="off" autocapitalize="characters" placeholder="e.g. T000012-003">
+          <label for="a-note">What did you not understand? (optional)</label>
+          <textarea class="input input--written" id="a-note" rows="3" maxlength="300"></textarea>
+          <div id="a-msg" role="alert" hidden></div>
+          <button class="btn" id="a-send" type="submit">Send to my teacher</button>
+        </form>
+        <div id="req-list" class="list"></div>
+        <p class="muted" id="req-empty" hidden>You have not asked anything yet.</p>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+<script src="assets/vendor/katex/katex.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/datetime.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/tex.js"></script>
+<script src="assets/js/help.js"></script>
+</body>
+</html>

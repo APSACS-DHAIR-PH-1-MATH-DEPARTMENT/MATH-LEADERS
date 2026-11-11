@@ -406,3 +406,16 @@ body.lightbox-open { overflow: hidden; }
 
 /* build 10: small question-ID chip on every test question */
 .chip--id { background: #eef1f4; color: #4b5563; font-weight: 600; font-size: .74rem; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+
+/* Update 8 step 5: help & requests */
+.status--archived { background: #e8ecef; color: #44505a; }
+.rowcard--new { border-color: var(--green); box-shadow: 0 0 0 2px var(--ok-bg); }
+.rowcard > * + * { margin-top: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ask { margin-top: 8px; }
+.ask__form { margin-top: 8px; display: grid; gap: 8px; }
+.ask__form .btn--small { justify-self: start; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.check--inline { margin: 2px 0; }
+.check--inline span { font-weight: 600; }
+#a-send { margin-top: 10px; }
