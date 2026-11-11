@@ -8,8 +8,6 @@
     { id: "tests",     label: "Tests",             icon: "target", href: "tests.html",     ready: true },
     { id: "issues",    label: "Disciplinary issues", icon: "clipboard", href: "issues.html",  ready: true },
     { id: "feedback",  label: "Feedback",          icon: "chat", href: "feedback.html",  ready: true },
-    { id: "games",     label: "Games",             icon: "gamepad", href: "games.html",     ready: false },
-    { id: "positions", label: "Positions",         icon: "trophy", href: "positions.html", ready: false },
     { id: "remarks",   label: "Teacher's notes",   icon: "note", href: "remarks.html",   ready: false },
     { id: "profile",   label: "Profile",           icon: "user", href: "profile.html",   ready: true }
   ];

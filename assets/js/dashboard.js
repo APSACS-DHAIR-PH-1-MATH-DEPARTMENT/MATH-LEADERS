@@ -1,4 +1,4 @@
-/* dashboard.js — Home: greeting, progress tiles (filled when games open) and what is coming. */
+/* dashboard.js — Home: greeting, links to school record and feedback, and what is coming. */
 (function () {
   var $ = UI.$;
   if (!Auth.requireSession()) return;
