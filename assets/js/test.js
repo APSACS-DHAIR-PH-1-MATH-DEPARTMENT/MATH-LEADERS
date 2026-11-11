@@ -131,6 +131,22 @@
     box.appendChild(h("p", "hint", "Write only the number. Units are not needed."));
   }
 
+  /* Update 8 step 4b: short / long questions. The student writes; the TEACHER marks it later. */
+  function renderWritten(q, box) {
+    var max = q.type === "long" ? 1500 : 400;
+    var ta = h("textarea", "input input--written");
+    ta.id = "ans-written"; ta.rows = q.type === "long" ? 9 : 4; ta.maxLength = max;
+    ta.setAttribute("aria-label", "Your written answer");
+    ta.placeholder = q.type === "long" ? "Write your working and your answer here…" : "Write your answer here…";
+    ta.value = S.answers[q.questionId] || "";
+    var cnt = h("p", "hint written__count");
+    function upd() { cnt.textContent = ta.value.length + " / " + max + " characters"; }
+    ta.addEventListener("input", function () { upd(); setAnswer(q, ta.value.trim() === "" ? "" : ta.value); });
+    box.textContent = ""; box.appendChild(ta); box.appendChild(cnt);
+    box.appendChild(h("p", "hint", "Your teacher will mark this answer after the test. The other questions are marked at once."));
+    upd();
+  }
+
   function renderTF(q, box) {
     var wrap = h("div", "opts opts--row");
     [["true", "True"], ["false", "False"]].forEach(function (p) {
@@ -182,7 +198,9 @@
     var d = $("q-diff"); d.textContent = DIFF[q.difficulty] || q.difficulty; d.className = "chip chip--diff chip--" + q.difficulty;
     TeX.set($("q-text"), q.question);
     var box = $("q-answer");
-    if (q.type === "mcq") renderOptions(q, box); else if (q.type === "fill") renderFill(q, box); else if (q.type === "order") renderOrder(q, box); else renderTF(q, box);
+    var mk = $("q-marks"); if (mk) { mk.textContent = (q.marks || 1) + ((q.marks || 1) === 1 ? " mark" : " marks"); }
+    if (q.type === "mcq") renderOptions(q, box); else if (q.type === "fill") renderFill(q, box); else if (q.type === "order") renderOrder(q, box);
+    else if (q.type === "short" || q.type === "long") renderWritten(q, box); else renderTF(q, box);
     refreshChrome();
     show("v-run");
   }
@@ -267,21 +285,30 @@
   function plain(s) { return String(s == null ? "" : s).replace(/\|/g, " , "); }
 
   function answerCard(a, i) {
-    var kind = !a.answered ? "blank" : (a.isCorrect ? "right" : "wrong");
+    var kind, label;
+    if (a.pending) { kind = "pending"; label = "⏳ Waiting for your teacher to mark"; }
+    else if (!a.answered) { kind = "blank"; label = "— Not answered"; }
+    else if (a.manual) {
+      kind = a.marksAwarded >= a.marks ? "right" : (a.marksAwarded > 0 ? "partial" : "wrong");
+      label = kind === "right" ? "✓ Full marks" : (kind === "partial" ? "◐ Partly correct" : "✗ No marks");
+    } else { kind = a.isCorrect ? "right" : "wrong"; label = a.isCorrect ? "✓ Correct" : "✗ Not correct"; }
     var c = h("article", "ans ans--" + kind);
-    c.setAttribute("data-kind", kind);
+    c.setAttribute("data-kind", kind === "partial" ? "wrong" : kind);
     var top = h("div", "ans__top");
     top.appendChild(h("span", "ans__n", "Q" + (i + 1)));
-    top.appendChild(h("span", "ans__s", kind === "right" ? "✓ Correct" : (kind === "wrong" ? "✗ Not correct" : "— Not answered")));
+    top.appendChild(h("span", "ans__s", label));
+    if (a.manual || a.marks > 1) top.appendChild(h("span", "chip chip--marks", (a.pending ? "" : a.marksAwarded + " / ") + a.marks + (a.marks === 1 ? " mark" : " marks")));
     top.appendChild(h("span", "chip", a.topic));
     if (a.questionId) top.appendChild(h("span", "chip chip--id", a.questionId));
     c.appendChild(top);
     c.appendChild(tex("div", "qtext qtext--sm", a.question || ""));
     var yours = h("div", "ans__line"); yours.appendChild(h("b", "", "Your answer: "));
-    if (a.answered) yours.appendChild(tex("span", "", plain(a.givenText))); else yours.appendChild(h("span", "muted", "none"));
+    if (a.answered) yours.appendChild(a.manual ? h("span", "ans__written", a.givenText) : tex("span", "", plain(a.givenText))); else yours.appendChild(h("span", "muted", "none"));
     c.appendChild(yours);
+    if (a.remark) { var rm = h("div", "ans__remark"); rm.appendChild(h("b", "", "Teacher's remark: ")); rm.appendChild(h("span", "", a.remark)); c.appendChild(rm); }
     if (kind !== "right") {
-      var right = h("div", "ans__line ans__line--right"); right.appendChild(h("b", "", "Right answer: ")); right.appendChild(tex("span", "", plain(a.correctText)));
+      var right = h("div", "ans__line ans__line--right"); right.appendChild(h("b", "", a.manual ? "Model answer: " : "Right answer: "));
+      right.appendChild(a.manual ? h("span", "ans__written", a.correctText) : tex("span", "", plain(a.correctText)));
       c.appendChild(right);
     }
     if (a.explanation) { var ex = h("div", "ans__why"); ex.appendChild(h("b", "", "Why: ")); ex.appendChild(tex("span", "", a.explanation)); c.appendChild(ex); }
@@ -300,15 +327,19 @@
       c.appendChild(h("p", "", res.message || "Your teacher will release the result later."));
       $("res-more").hidden = true; show("v-result"); return;
     }
-    var at = res.attempt, p = at.scorePct;
-    var head = p >= 80 ? "Excellent work!" : (p >= 60 ? "Good effort!" : (p >= 40 ? "Keep practising" : "Let's work on this together"));
-    var headIcon = p >= 80 ? "star" : (p >= 60 ? "thumb" : (p >= 40 ? "trend" : "heart"));
+    var at = res.attempt, p = at.scorePct, waiting = at.pendingCount || 0;
+    var useMarks = at.marksTotal !== at.total || res.answers.some(function (x) { return x.manual; });
+    var head = waiting ? "Test handed in" : (p >= 80 ? "Excellent work!" : (p >= 60 ? "Good effort!" : (p >= 40 ? "Keep practising" : "Let's work on this together")));
+    var headIcon = waiting ? "thumb" : (p >= 80 ? "star" : (p >= 60 ? "thumb" : (p >= 40 ? "trend" : "heart")));
     var headEl = h("h2", "", "");
     headEl.innerHTML = UI.icon(headIcon);
     headEl.appendChild(document.createTextNode(" " + head));
     c.appendChild(headEl);
-    var big = h("div", "result__score"); big.appendChild(h("span", "result__n", at.correct + " / " + at.total)); big.appendChild(h("span", "result__p", p + "%"));
+    var big = h("div", "result__score");
+    big.appendChild(h("span", "result__n", useMarks ? at.marksObtained + " / " + at.marksTotal + " marks" : at.correct + " / " + at.total));
+    big.appendChild(h("span", "result__p", p + "%" + (waiting ? " so far" : "")));
     c.appendChild(big);
+    if (waiting) c.appendChild(h("p", "notice notice--info", "⏳ " + waiting + " written answer" + (waiting === 1 ? " is" : "s are") + " waiting for your teacher to mark. The marks above count only what is already marked. Open this result again later to see your final score."));
     var meta = at.answered < at.total ? (at.total - at.answered) + " question(s) were not answered. " : "";
     c.appendChild(h("p", "muted", meta + "Time used: " + fmt(at.timeUsedSec) + (res.late ? " · submitted just after the time limit" : "")));
     if (res.strongest) c.appendChild(h("p", "", "Strongest topic: " + res.strongest + (res.weakest ? " · Needs practice: " + res.weakest : "")));

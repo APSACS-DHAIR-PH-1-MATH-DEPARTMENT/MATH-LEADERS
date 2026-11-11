@@ -39,8 +39,11 @@
 
     if (t.last) {
       var l = t.last;
+      var marksMode = l.marksTotal !== l.total;
       var line = t.resultVisible && l.scorePct !== null
-        ? "Last result: " + l.correct + " / " + l.total + " (" + l.scorePct + "%)"
+        ? (l.pendingCount
+          ? "Marks so far: " + l.marksObtained + " / " + l.marksTotal + " · " + l.pendingCount + " written answer" + (l.pendingCount === 1 ? "" : "s") + " waiting for your teacher"
+          : "Last result: " + (marksMode ? l.marksObtained + " / " + l.marksTotal + " marks" : l.correct + " / " + l.total) + " (" + l.scorePct + "%)")
         : "Your answers are saved. The result will be shown after the test closes.";
       c.appendChild(h("p", "small test__last", line));
     }
