@@ -56,7 +56,7 @@
       r.href = "test.html?result=" + encodeURIComponent(t.last.attemptId);
       actions.appendChild(r);
     } else if (t.last) {
-      var r2 = h("a", "btn btn--small btn--ghost", "Saved ✓");
+      var r2 = h("a", "btn btn--small btn--ghost", "Saved");
       r2.href = "test.html?result=" + encodeURIComponent(t.last.attemptId);
       actions.appendChild(r2);
     }

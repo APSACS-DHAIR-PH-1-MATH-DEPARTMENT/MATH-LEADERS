@@ -1,17 +1,17 @@
 /* router.js — the page shell for every logged-in page: top bar + SIDEBAR, built at RUNTIME from one list.
    Adding or opening a tab later = edit ONE line of TABS (set ready:true when its page exists).
-   Phone: the sidebar is a drawer opened by the ☰ button. Wide screens: it is always visible.
+   Phone: the sidebar is a drawer opened by the menu button. Wide screens: it is always visible.
    Links are RELATIVE ("dashboard.html"): the site lives under /<repo>/ on GitHub Pages, not at the domain root. */
 (function () {
   var TABS = [
-    { id: "dashboard", label: "Home",              icon: "🏠", href: "dashboard.html", ready: true },
-    { id: "tests",     label: "Tests",             icon: "🎯", href: "tests.html",     ready: true },
-    { id: "issues",    label: "Disciplinary issues", icon: "📋", href: "issues.html",  ready: true },
-    { id: "feedback",  label: "Feedback",          icon: "💬", href: "feedback.html",  ready: true },
-    { id: "games",     label: "Games",             icon: "🎮", href: "games.html",     ready: false },
-    { id: "positions", label: "Positions",         icon: "🏆", href: "positions.html", ready: false },
-    { id: "remarks",   label: "Teacher's notes",   icon: "📝", href: "remarks.html",   ready: false },
-    { id: "profile",   label: "Profile",           icon: "👤", href: "profile.html",   ready: true }
+    { id: "dashboard", label: "Home",              icon: "home", href: "dashboard.html", ready: true },
+    { id: "tests",     label: "Tests",             icon: "target", href: "tests.html",     ready: true },
+    { id: "issues",    label: "Disciplinary issues", icon: "clipboard", href: "issues.html",  ready: true },
+    { id: "feedback",  label: "Feedback",          icon: "chat", href: "feedback.html",  ready: true },
+    { id: "games",     label: "Games",             icon: "gamepad", href: "games.html",     ready: false },
+    { id: "positions", label: "Positions",         icon: "trophy", href: "positions.html", ready: false },
+    { id: "remarks",   label: "Teacher's notes",   icon: "note", href: "remarks.html",   ready: false },
+    { id: "profile",   label: "Profile",           icon: "user", href: "profile.html",   ready: true }
   ];
 
   var activeTab = "";
@@ -38,7 +38,7 @@
 
   function navHtml() {
     return TABS.map(function (t) {
-      var inner = '<span class="side__icon" aria-hidden="true">' + t.icon + '</span><span class="side__label">' + esc(t.label) + "</span>";
+      var inner = '<span class="side__icon" aria-hidden="true">' + UI.icon(t.icon) + '</span><span class="side__label">' + esc(t.label) + "</span>";
       if (!t.ready) return '<li><span class="side__item is-soon" aria-disabled="true">' + inner + '<span class="side__tag">Soon</span></span></li>';
       var on = t.id === activeTab;
       return '<li><a class="side__item' + (on ? " is-active" : "") + '" href="' + esc(t.href) + '"' + (on ? ' aria-current="page"' : "") + ">" + inner + "</a></li>";
@@ -47,7 +47,7 @@
 
   function userHtml(p) {
     if (!p || !p.studentName) return "";
-    return '<div class="side__user"><div class="side__uname">' + esc(p.studentName) + '</div><div class="side__umeta">Class ' + esc(p.classLevel) +
+    return '<div class="side__user"><div class="side__uname">' + esc(UI.name(p.studentName)) + '</div><div class="side__umeta">Class ' + esc(p.classLevel) +
       (p.section ? " · Section " + esc(p.section) : "") + "</div></div>";
   }
 
@@ -66,7 +66,7 @@
     var top = document.getElementById("app-header");
     if (top) {
       top.innerHTML =
-        '<button class="menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-controls="app-side" aria-expanded="false">☰</button>' +
+        '<button class="menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-controls="app-side" aria-expanded="false">' + UI.icon("menu") + '</button>' +
         '<img class="header__logo" src="assets/img/logo-128.webp" width="40" height="40" alt="">' +
         '<div class="topbar__text"><div class="header__title">' + esc(cfg.APP_NAME) + '</div><div class="header__sub">' + esc(cfg.DEPARTMENT) + "</div></div>";
     }

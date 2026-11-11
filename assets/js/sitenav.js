@@ -28,14 +28,14 @@
     '<div class="sitenav__inner">' +
     '<a class="sitenav__brand" href="index.html"><img src="assets/img/logo-128.webp" width="40" height="40" alt=""><span><span class="sitenav__name">' + esc(cfg.APP_NAME || "Math Leaders") +
     '</span><span class="sitenav__dept">APSACS DHA-I R Phase 1 Mathematics</span></span></a>' +
-    '<button class="sitenav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel">☰</button>' +
+    '<button class="sitenav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-panel">' + UI.icon("menu") + '</button>' +
     '<nav class="sitenav__panel" id="nav-panel" aria-label="Main"><ul class="sitenav__list">' + links + actions + "</ul></nav></div>";
 
   var btn = document.getElementById("nav-toggle"), panel = document.getElementById("nav-panel");
   function setOpen(on) {
     panel.classList.toggle("is-open", on);
     btn.setAttribute("aria-expanded", on ? "true" : "false");
-    btn.textContent = on ? "✕" : "☰";
+    btn.innerHTML = UI.icon(on ? "close" : "menu");
     btn.setAttribute("aria-label", on ? "Close menu" : "Open menu");
   }
   btn.addEventListener("click", function () { setOpen(!panel.classList.contains("is-open")); });

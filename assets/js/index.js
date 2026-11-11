@@ -13,7 +13,7 @@
   Api.feedback.publicList().then(function (r) {
     if (!r.feedback || !r.feedback.length) return;
     $("voices-list").innerHTML = r.feedback.map(function (f) {
-      return '<figure class="voice"><blockquote>' + UI.esc(f.message) + '</blockquote><figcaption>— ' + UI.esc(f.displayName) + " · Class " + UI.esc(f.classLabel) + "</figcaption></figure>";
+      return '<figure class="voice"><blockquote>' + UI.esc(f.message) + '</blockquote><figcaption>— ' + UI.esc(UI.name(f.displayName)) + " · Class " + UI.esc(f.classLabel) + "</figcaption></figure>";
     }).join("");
     $("voices").hidden = false;
   }).catch(function () { /* the home page works without it */ });

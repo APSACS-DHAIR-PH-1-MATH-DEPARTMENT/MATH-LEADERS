@@ -6,8 +6,8 @@
 
   function show(p) {
     $("p-id").textContent = p.studentId;
-    $("p-name").textContent = p.studentName;
-    $("p-father").textContent = p.fatherName;
+    $("p-name").textContent = UI.name(p.studentName);
+    $("p-father").textContent = UI.name(p.fatherName);
     $("p-class").textContent = "Class " + p.classLevel;
     $("p-section").textContent = p.section || "—";
     Router.setUser(p);

@@ -15,7 +15,7 @@
   function drawAll(list) {
     $("all-empty").hidden = list.length > 0;
     $("all-list").innerHTML = list.map(function (f) {
-      return '<figure class="voice"><blockquote>' + UI.esc(f.message) + '</blockquote><figcaption>— ' + UI.esc(f.displayName) + " · Class " + UI.esc(f.classLabel) + "</figcaption></figure>";
+      return '<figure class="voice"><blockquote>' + UI.esc(f.message) + '</blockquote><figcaption>— ' + UI.esc(UI.name(f.displayName)) + " · Class " + UI.esc(f.classLabel) + "</figcaption></figure>";
     }).join("");
   }
 

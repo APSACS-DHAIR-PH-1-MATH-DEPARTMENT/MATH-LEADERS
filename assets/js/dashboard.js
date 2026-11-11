@@ -7,7 +7,7 @@
   function firstName(full) { return String(full || "").trim().split(/\s+/)[0] || ""; }
 
   function show(p) {
-    $("greet").textContent = "Assalam o Alaikum, " + firstName(p.studentName) + "!";
+    $("greet").textContent = "Assalam o Alaikum, " + firstName(UI.name(p.studentName)) + "!";
     $("chip-class").textContent = "Class " + p.classLevel;
     if (p.section) { $("chip-section").hidden = false; $("chip-section").textContent = "Section " + p.section; }
     $("who").textContent = p.studentId;

@@ -295,13 +295,17 @@
       c.appendChild(h("p", "", res.message || "")); $("res-more").hidden = true; show("v-result"); return;
     }
     if (!res.visible) {
-      c.appendChild(h("h2", "", "Your answers are saved ✓"));
+      c.appendChild(h("h2", "", "Your answers are saved"));
       c.appendChild(h("p", "", res.message || "Your teacher will release the result later."));
       $("res-more").hidden = true; show("v-result"); return;
     }
     var at = res.attempt, p = at.scorePct;
-    var head = p >= 80 ? "Excellent work! 🌟" : (p >= 60 ? "Good effort! 👍" : (p >= 40 ? "Keep practising 💪" : "Let's work on this together 🤝"));
-    c.appendChild(h("h2", "", head));
+    var head = p >= 80 ? "Excellent work!" : (p >= 60 ? "Good effort!" : (p >= 40 ? "Keep practising" : "Let's work on this together"));
+    var headIcon = p >= 80 ? "star" : (p >= 60 ? "thumb" : (p >= 40 ? "trend" : "heart"));
+    var headEl = h("h2", "", "");
+    headEl.innerHTML = UI.icon(headIcon);
+    headEl.appendChild(document.createTextNode(" " + head));
+    c.appendChild(headEl);
     var big = h("div", "result__score"); big.appendChild(h("span", "result__n", at.correct + " / " + at.total)); big.appendChild(h("span", "result__p", p + "%"));
     c.appendChild(big);
     var meta = at.answered < at.total ? (at.total - at.answered) + " question(s) were not answered. " : "";
