@@ -25,6 +25,7 @@
     top.appendChild(left); top.appendChild(h("span", "status " + st[1], r.unread ? "New reply" : st[0])); c.appendChild(top);
     if (r.type === "help" && r.questionText) { var q = h("div", "qtext qtext--sm"); TeX.set(q, r.questionText); c.appendChild(q); }
     if (r.type === "recheck") c.appendChild(h("p", "small", r.questionIds.length ? "Questions: " + r.questionIds.join(", ") : "The whole test"));
+    if (r.type === "help" && r.videoId && window.Video) c.appendChild(Video.button(r.videoId));
     if (r.studentNote) { var n = h("p", "small"); n.appendChild(h("b", "", r.type === "recheck" ? "Your reason: " : "Your note: ")); n.appendChild(document.createTextNode(r.studentNote)); c.appendChild(n); }
     if (r.status !== "open" && (r.response || r.responseLink)) {
       var rep = h("div", "ans__why"); rep.appendChild(h("b", "", (r.respondedByName ? UI.name(r.respondedByName) : "Your teacher") + " replied: "));

@@ -6,10 +6,12 @@
   var TABS = [
     { id: "dashboard", label: "Home",              icon: "home", href: "dashboard.html", ready: true },
     { id: "tests",     label: "Tests",             icon: "target", href: "tests.html",     ready: true },
+    { id: "practice",  label: "Practice",          icon: "bolt", href: "practice.html",  ready: true },
+    { id: "exercises", label: "Exercises",         icon: "book", href: "exercises.html", ready: true },
     { id: "help",      label: "Help & requests",   icon: "pencil", href: "help.html",     ready: true },
     { id: "issues",    label: "Disciplinary issues", icon: "clipboard", href: "issues.html",  ready: true },
     { id: "feedback",  label: "Feedback",          icon: "chat", href: "feedback.html",  ready: true },
-    { id: "remarks",   label: "Teacher's notes",   icon: "note", href: "remarks.html",   ready: false },
+    { id: "notes",     label: "Teacher's notes",   icon: "note", href: "notes.html",     ready: true },
     { id: "profile",   label: "Profile",           icon: "user", href: "profile.html",   ready: true }
   ];
 

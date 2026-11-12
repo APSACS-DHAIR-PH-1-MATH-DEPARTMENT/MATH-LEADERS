@@ -9,7 +9,7 @@
 
   // Only harmless READS may be retried automatically (a cold start returns an HTML page, not JSON).
   // Login, codes, PIN and registration are NEVER retried — that could burn rate limits or double-apply.
-  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1, "assessments/mine": 1, "assessments/result": 1, "requests/mine": 1 };
+  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1, "assessments/mine": 1, "assessments/result": 1, "requests/mine": 1, "practice/options": 1, "practice/list": 1, "exercises/options": 1, "exercises/list": 1, "remarks/mine": 1 };
 
   function notConfigured() {
     return !CFG || !CFG.API_BASE_URL || !CFG.API_KEY ||
@@ -98,6 +98,16 @@
       seen: function () { return authed("requests/seen"); },
       withdraw: function (requestId) { return authed("requests/withdraw", { requestId: requestId }); }
     },
+    // Update 8 steps 6-7: practice questions, exercises/worksheets (with written solutions + videos), teacher's notes. Reads only.
+    practice: {
+      options: function () { return authed("practice/options"); },
+      list: function (chapterRef, topic) { return authed("practice/list", { chapterRef: chapterRef, topic: topic || "" }); }
+    },
+    exercises: {
+      options: function () { return authed("exercises/options"); },
+      list: function (chapterRef, collectionType, collectionName) { return authed("exercises/list", { chapterRef: chapterRef, collectionType: collectionType, collectionName: collectionName }); }
+    },
+    remarks: { mine: function () { return authed("remarks/mine"); } },
     // Stage 7: diagnostic tests. start/submit are never retried automatically (submit is safe to repeat BY HAND: the server ignores a second one).
     assessments: {
       mine: function () { return authed("assessments/mine"); },
