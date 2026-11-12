@@ -101,11 +101,20 @@
     // Update 8 steps 6-7: practice questions, exercises/worksheets (with written solutions + videos), teacher's notes. Reads only.
     practice: {
       options: function () { return authed("practice/options"); },
-      list: function (chapterRef, topic) { return authed("practice/list", { chapterRef: chapterRef, topic: topic || "" }); }
+      // paging = { offset, limit } (10 at a time). Without it the server sends everything, as before.
+      list: function (chapterRef, topic, paging) {
+        var p = { chapterRef: chapterRef, topic: topic || "" };
+        if (paging) { p.offset = paging.offset; p.limit = paging.limit; }
+        return authed("practice/list", p);
+      }
     },
     exercises: {
       options: function () { return authed("exercises/options"); },
-      list: function (chapterRef, collectionType, collectionName) { return authed("exercises/list", { chapterRef: chapterRef, collectionType: collectionType, collectionName: collectionName }); }
+      list: function (chapterRef, collectionType, collectionName, paging) {
+        var p = { chapterRef: chapterRef, collectionType: collectionType, collectionName: collectionName };
+        if (paging) { p.offset = paging.offset; p.limit = paging.limit; }
+        return authed("exercises/list", p);
+      }
     },
     remarks: { mine: function () { return authed("remarks/mine"); } },
     // Stage 7: diagnostic tests. start/submit are never retried automatically (submit is safe to repeat BY HAND: the server ignores a second one).

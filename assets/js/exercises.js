@@ -7,7 +7,7 @@
   Router.mountShell("exercises");
 
   function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
-  var PAGE = 15, STATE = { all: [], shown: 0 };
+  var PAGE = Pager.PAGE, PG = null, OPT = null;
 
   function card(q) {
     var c = h("article", "card pq");
@@ -31,26 +31,27 @@
     return c;
   }
 
-  function more() {
-    var list = $("q-list"), end = Math.min(STATE.all.length, STATE.shown + PAGE);
-    for (var i = STATE.shown; i < end; i++) list.appendChild(card(STATE.all[i]));
-    STATE.shown = end; $("more").hidden = STATE.shown >= STATE.all.length;
-    $("q-count").textContent = STATE.all.length + " question" + (STATE.all.length === 1 ? "" : "s") + " · showing " + STATE.shown;
-  }
-
   function open(ch, col) {
+    if (PG) PG.destroy();
     $("pick").hidden = true; $("run").hidden = false; UI.clear($("page-msg"));
     $("run-title").textContent = col.collectionName; $("run-sub").textContent = ch.chapter + " · " + (col.collectionType === "worksheet" ? "Worksheet" : "Exercise");
-    $("q-list").textContent = ""; $("q-count").textContent = "Loading…"; $("more").hidden = true;
-    Api.exercises.list(ch.chapterRef, col.collectionType, col.collectionName).then(function (r) {
-      STATE.all = r.questions || []; STATE.shown = 0; $("q-list").textContent = "";
-      $("q-empty").hidden = STATE.all.length > 0;
-      if (STATE.all.length) more(); else $("q-count").textContent = "";
-      window.scrollTo(0, 0);
-    }).catch(function (e) { UI.say($("page-msg"), e.message, "bad"); $("q-count").textContent = ""; });
+    PG = Pager.create({
+      listEl: $("q-list"), moreEl: $("more"), countEl: $("q-count"), emptyEl: $("q-empty"), pageSize: PAGE,
+      cache: Pager.pageCache(OPT, "x|" + ch.chapterRef + "|" + col.collectionType + "|" + col.collectionName, PAGE),
+      idOf: function (q) { return q.exerciseQuestionId; },
+      render: card,
+      fetch: function (offset, limit) {
+        return Api.exercises.list(ch.chapterRef, col.collectionType, col.collectionName, { offset: offset, limit: limit }).then(function (r) {
+          return { items: r.questions || [], total: r.total, hasMore: r.hasMore, next: r.next, v: r.v };
+        });
+      },
+      onOk: function () { UI.clear($("page-msg")); },
+      onError: function (e) { UI.say($("page-msg"), e.message, "bad"); }
+    });
+    PG.start();
   }
 
-  function pickScreen(r) {
+  function pickScreen(r, isRefresh) {
     var box = $("chapters"); box.textContent = "";
     (r.chapters || []).forEach(function (ch) {
       var c = h("article", "rowcard");
@@ -67,16 +68,18 @@
       c.appendChild(cols); box.appendChild(c);
     });
     $("none-card").hidden = (r.chapters || []).length > 0;
-    $("loading").hidden = true; $("ex-wrap").hidden = false; $("pick").hidden = false; $("run").hidden = true; $("retry").hidden = true;
+    $("loading").hidden = true; $("ex-wrap").hidden = false; $("retry").hidden = true;
+    if (!isRefresh) { $("pick").hidden = false; $("run").hidden = true; }   // a quiet refresh must never pull the child out of a chapter
   }
 
   function load() {
     $("loading").hidden = false; $("ex-wrap").hidden = true; $("retry").hidden = true; UI.clear($("page-msg"));
-    Api.exercises.options().then(pickScreen).catch(function (e) { $("loading").hidden = true; UI.say($("page-msg"), /was not found/.test(e.message || "") ? "Exercises are not switched on yet. Please try again later." : e.message, "bad"); $("retry").hidden = false; });
+    OPT = Pager.options("exercises", function () { return Api.exercises.options(); }, pickScreen, function (e) {
+      $("loading").hidden = true; UI.say($("page-msg"), /was not found/.test(e.message || "") ? "Exercises are not switched on yet. Please try again later." : e.message, "bad"); $("retry").hidden = false;
+    });
   }
   $("retry").addEventListener("click", load);
-  $("more").addEventListener("click", more);
-  $("back").addEventListener("click", function () { $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
+  $("back").addEventListener("click", function () { if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
   var cached = Storage.getProfile(); if (cached) Router.setUser(cached);
   load();
 })();

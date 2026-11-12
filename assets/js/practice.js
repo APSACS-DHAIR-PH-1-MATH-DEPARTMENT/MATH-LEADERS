@@ -7,7 +7,7 @@
   Router.mountShell("practice");
 
   function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
-  var PAGE = 10, STATE = { chapter: null, topic: "", all: [], shown: 0 };
+  var PAGE = Pager.PAGE, PG = null, OPT = null;
   var TYPE_LABEL = { mcq: "Choose one", tf: "True / False", fill: "Fill in", short: "Short answer", long: "Long answer", order: "Put in order" };
 
   /* ---- answer checking (same idea as the server: ignore case and spaces, 0.50 = 0.5) ---- */
@@ -125,28 +125,27 @@
   }
 
   /* ---- pages ---- */
-  function showQuestions() {
-    var list = $("q-list"); var end = Math.min(STATE.all.length, STATE.shown + PAGE);
-    for (var i = STATE.shown; i < end; i++) list.appendChild(card(STATE.all[i], i + 1));
-    STATE.shown = end;
-    $("more").hidden = STATE.shown >= STATE.all.length;
-    $("q-count").textContent = STATE.all.length + " question" + (STATE.all.length === 1 ? "" : "s") + " · showing " + STATE.shown;
-  }
-
   function openChapter(ch, topic) {
-    STATE.chapter = ch; STATE.topic = topic || "";
+    if (PG) PG.destroy();
     $("pick").hidden = true; $("run").hidden = false; UI.clear($("page-msg"));
     $("run-title").textContent = ch.chapter + (topic ? " — " + topic : "");
-    $("q-list").textContent = ""; $("q-count").textContent = "Loading…"; $("more").hidden = true;
-    Api.practice.list(ch.chapterRef, topic || "").then(function (r) {
-      STATE.all = r.questions || []; STATE.shown = 0; $("q-list").textContent = "";
-      $("q-empty").hidden = STATE.all.length > 0;
-      if (STATE.all.length) showQuestions(); else $("q-count").textContent = "";
-      window.scrollTo(0, 0);
-    }).catch(function (e) { UI.say($("page-msg"), e.message, "bad"); $("q-count").textContent = ""; });
+    PG = Pager.create({
+      listEl: $("q-list"), moreEl: $("more"), countEl: $("q-count"), emptyEl: $("q-empty"), pageSize: PAGE,
+      cache: Pager.pageCache(OPT, "p|" + ch.chapterRef + "|" + (topic || ""), PAGE),
+      idOf: function (q) { return q.questionId; },
+      render: card,
+      fetch: function (offset, limit) {
+        return Api.practice.list(ch.chapterRef, topic || "", { offset: offset, limit: limit }).then(function (r) {
+          return { items: r.questions || [], total: r.total, hasMore: r.hasMore, next: r.next, v: r.v };
+        });
+      },
+      onOk: function () { UI.clear($("page-msg")); },
+      onError: function (e) { UI.say($("page-msg"), e.message, "bad"); }
+    });
+    PG.start();
   }
 
-  function pickScreen(r) {
+  function pickScreen(r, isRefresh) {
     var box = $("chapters"); box.textContent = "";
     (r.chapters || []).forEach(function (ch) {
       var c = h("article", "rowcard");
@@ -166,16 +165,18 @@
       box.appendChild(c);
     });
     $("none-card").hidden = (r.chapters || []).length > 0;
-    $("loading").hidden = true; $("practice-wrap").hidden = false; $("pick").hidden = false; $("run").hidden = true; $("retry").hidden = true;
+    $("loading").hidden = true; $("practice-wrap").hidden = false; $("retry").hidden = true;
+    if (!isRefresh) { $("pick").hidden = false; $("run").hidden = true; }   // a quiet refresh must never pull the child out of a chapter
   }
 
   function load() {
     $("loading").hidden = false; $("practice-wrap").hidden = true; $("retry").hidden = true; UI.clear($("page-msg"));
-    Api.practice.options().then(pickScreen).catch(function (e) { $("loading").hidden = true; UI.say($("page-msg"), /was not found/.test(e.message || "") ? "Practice is not switched on yet. Please try again later." : e.message, "bad"); $("retry").hidden = false; });
+    OPT = Pager.options("practice", function () { return Api.practice.options(); }, pickScreen, function (e) {
+      $("loading").hidden = true; UI.say($("page-msg"), /was not found/.test(e.message || "") ? "Practice is not switched on yet. Please try again later." : e.message, "bad"); $("retry").hidden = false;
+    });
   }
   $("retry").addEventListener("click", load);
-  $("more").addEventListener("click", showQuestions);
-  $("back").addEventListener("click", function () { $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
+  $("back").addEventListener("click", function () { if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
   var cached = Storage.getProfile(); if (cached) Router.setUser(cached);
   load();
 })();
