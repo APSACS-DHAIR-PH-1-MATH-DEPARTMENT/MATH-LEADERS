@@ -9,14 +9,14 @@
 
   // Only harmless READS may be retried automatically (a cold start returns an HTML page, not JSON).
   // Login, codes, PIN and registration are NEVER retried — that could burn rate limits or double-apply.
-  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1, "assessments/mine": 1, "assessments/result": 1, "requests/mine": 1, "practice/options": 1, "practice/list": 1, "exercises/options": 1, "exercises/list": 1, "remarks/mine": 1 };
+  var RETRYABLE = { "health": 1, "profile/me": 1, "issues/mine": 1, "feedback/mine": 1, "feedback/approved": 1, "feedback/public": 1, "assessments/mine": 1, "assessments/result": 1, "requests/mine": 1, "practice/options": 1, "practice/list": 1, "exercises/options": 1, "exercises/list": 1, "remarks/mine": 1, "reports/mine": 1 };
 
   function notConfigured() {
     return !CFG || !CFG.API_BASE_URL || !CFG.API_KEY ||
       CFG.API_BASE_URL.indexOf("PASTE_") === 0 || CFG.API_KEY.indexOf("PASTE_") === 0;
   }
 
-  function call(operation, params, attempt) {
+  function call(operation, params, attempt, opts) {
     attempt = attempt || 1;
     if (notConfigured()) {
       return Promise.reject(new Error("This site is not set up yet (config.js still has the PASTE_ placeholders)."));
@@ -32,6 +32,7 @@
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(body),
+      keepalive: !!(opts && opts.keepalive),   // set when the page is being left, so the browser still finishes the request
       signal: ctrl ? ctrl.signal : undefined
     })
       .then(function (res) { return res.text(); })
@@ -43,7 +44,7 @@
         if (payload === null) {   // an HTML page = the server is waking up
           if (RETRYABLE[operation] && attempt < 3) {
             return new Promise(function (resolve) {
-              setTimeout(function () { resolve(call(operation, params, attempt + 1)); }, 700 * attempt);
+              setTimeout(function () { resolve(call(operation, params, attempt + 1, opts)); }, 700 * attempt);
             });
           }
           throw new Error("The server is waking up. Please try again in a few seconds.");
@@ -61,22 +62,26 @@
 
   function isSessionOver(err) { return err && (err.code === "AUTH_003" || err.code === "AUTH_004"); }
   function isInactive(err) { return err && err.code === "AUTH_002"; }
+  // Step 9.4: the child's latest weekly report is unread, so every other tab is closed until she presses "I have read the report".
+  function isLocked(err) { return err && err.code === "REPORT_UNREAD"; }
 
   // Adds the session token. The backend decides WHO you are from the token alone.
-  function authed(operation, params) {
+  function authed(operation, params, opts) {
     var p = params || {};
     p.token = window.Storage.getToken();
-    return call(operation, p).catch(function (err) {
+    return call(operation, p, 1, opts).catch(function (err) {
       if (isSessionOver(err) || isInactive(err)) {
         window.Storage.clearSession();
         window.location.replace("login.html?" + (isInactive(err) ? "inactive=1" : "expired=1"));
+      } else if (isLocked(err) && !/report(\.html)?$/.test(window.location.pathname)) {
+        window.location.replace("report.html?locked=1");   // any page, any request: take her to the report
       }
       throw err;
     });
   }
 
   window.Api = {
-    call: call, authed: authed,
+    call: call, authed: authed, isLocked: isLocked,
     health: function () { return call("health"); },
     student: { register: function (form) { return call("student/register", form); } },
     otp: {
@@ -106,7 +111,9 @@
         var p = { chapterRef: chapterRef, topic: topic || "" };
         if (paging) { p.offset = paging.offset; p.limit = paging.limit; }
         return authed("practice/list", p);
-      }
+      },
+      // Step 9.2: counts only (see activity.js). items = [{ source, chapterRef, attempted, rightFirstTime, solutionsViewed }]
+      activity: function (items, keepalive) { return authed("practice/activity", { items: items }, keepalive ? { keepalive: true } : undefined); }
     },
     exercises: {
       options: function () { return authed("exercises/options"); },
@@ -117,6 +124,11 @@
       }
     },
     remarks: { mine: function () { return authed("remarks/mine"); } },
+    // Step 9.4: the weekly reports (read only) and "I have read the report". markRead is never retried by itself; pressing it again is safe (the server keeps the first time).
+    reports: {
+      mine: function () { return authed("reports/mine"); },
+      markRead: function (reportId, comment) { return authed("reports/markRead", { reportId: reportId, comment: comment || "" }); }
+    },
     // Stage 7: diagnostic tests. start/submit are never retried automatically (submit is safe to repeat BY HAND: the server ignores a second one).
     assessments: {
       mine: function () { return authed("assessments/mine"); },

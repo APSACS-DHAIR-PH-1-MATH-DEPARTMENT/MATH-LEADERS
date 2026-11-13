@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#14532d">
+  <title>Weekly report — Math Leaders</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side" id="app-side" aria-label="Menu"></aside>
+  <div class="shell__body">
+    <header class="topbar" id="app-header"></header>
+    <main class="wrap wrap--app">
+      <div id="loading" class="skeleton" aria-label="Loading"></div>
+      <div id="page-msg" role="alert" hidden></div>
+      <button class="btn btn--ghost" id="retry" type="button" hidden>Try again</button>
+      <div class="card lockbanner" id="lock-banner" role="status" hidden>
+        <span class="lockbanner__ico" aria-hidden="true" data-icon="lock"></span>
+        <div><strong>Your weekly report is ready.</strong> Read it to the end and press <em>I have read the report</em>. The other tabs open as soon as you do.</div>
+      </div>
+      <div id="report-wrap" hidden>
+        <div class="card">
+          <h1>Weekly report</h1>
+          <p class="muted">A new report is made by the system every Friday at 5:00 PM. Please read it with your parents.</p>
+        </div>
+        <div class="card" id="none-card" hidden><p class="muted">No report yet. Your first weekly report will appear here after the next Friday, 5:00 PM.</p></div>
+        <div id="report-list" class="reports"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/initiative.js"></script>
+<script src="assets/js/datetime.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/report.js"></script>
+</body>
+</html>

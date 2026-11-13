@@ -5,6 +5,7 @@
 (function () {
   var TABS = [
     { id: "dashboard", label: "Home",              icon: "home", href: "dashboard.html", ready: true },
+    { id: "report",    label: "Weekly report",     icon: "trend", href: "report.html",    ready: true },
     { id: "tests",     label: "Tests",             icon: "target", href: "tests.html",     ready: true },
     { id: "practice",  label: "Practice",          icon: "bolt", href: "practice.html",  ready: true },
     { id: "exercises", label: "Exercises",         icon: "book", href: "exercises.html", ready: true },

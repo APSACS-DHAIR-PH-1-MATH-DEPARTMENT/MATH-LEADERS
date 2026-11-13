@@ -10,6 +10,18 @@
   catch (e) { NAME_RE = /^[A-Za-z][A-Za-z .'\-]*$/; }
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+  // Pakistan mobile number, typed any usual way (03001234567, 0300-1234567, +92 300 1234567, 923001234567, 0092 300 1234567).
+  // Same rule as the backend (ParentContact.gs); the backend stores it as +923001234567.
+  function phoneOk(value) {
+    var v = String(value || "").trim();
+    if (!/^\+?[\d\s\-()]+$/.test(v)) return false;
+    var d = v.replace(/[^\d]/g, "");
+    if (d.indexOf("0092") === 0) d = d.substring(4);
+    else if (d.length === 12 && d.indexOf("92") === 0) d = d.substring(2);
+    else if (d.length === 11 && d.charAt(0) === "0") d = d.substring(1);
+    return /^3\d{9}$/.test(d);
+  }
+
   // Class list comes from config.js, not from the HTML.
   $("section").innerHTML = '<option value="">Select section</option>' +
     (CFG.SECTIONS || ["A", "B", "C"]).map(function (x) { return '<option value="' + x + '">Section ' + x + "</option>"; }).join("");
@@ -36,6 +48,7 @@
       email: $("email").value.trim().toLowerCase(),
       classLevel: Number($("classLevel").value),
       section: $("section").value.trim().toUpperCase(),
+      parentPhone: $("parentPhone").value.trim(),
       consent: $("consent").checked,
       website: $("website").value          // bot trap: people leave it empty
     };
@@ -45,6 +58,8 @@
     if (!problem && data.fatherOccupation.length > 80) problem = "Father's occupation is too long.";
     if (!problem && !EMAIL_RE.test(data.email)) problem = "Please type a correct email address.";
     if (!problem && data.email !== $("email2").value.trim().toLowerCase()) problem = "The two email addresses are not the same.";
+    if (!problem && !data.parentPhone) problem = "Parent WhatsApp number is required.";
+    if (!problem && !phoneOk(data.parentPhone)) problem = "Enter a Pakistan mobile number for WhatsApp, like 03001234567.";
     if (!problem && CFG.CLASSES.indexOf(data.classLevel) === -1) problem = "Please select the class.";
     if (!problem && (CFG.SECTIONS || ["A", "B", "C"]).indexOf(data.section) === -1) problem = "Please select the section.";
     if (!problem && !data.consent) problem = "Please tick the box to confirm the parent/guardian agrees.";

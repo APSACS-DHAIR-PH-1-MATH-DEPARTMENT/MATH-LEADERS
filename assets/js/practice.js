@@ -1,5 +1,6 @@
-/* practice.js — Practice: pick a chapter (and topic), then answer questions for fun and revision. NOT scored, nothing is saved.
+/* practice.js — Practice: pick a chapter (and topic), then answer questions for fun and revision. NOT marked.
    The hint, the answer and the written solution arrive with the question, so every check happens in the browser.
+   Only COUNTS are saved (activity.js): questions tried, right at the first try, solutions opened. What the child types is never saved or sent.
    Server text is only ever inserted as text (TeX.set for formulas). */
 (function () {
   var $ = UI.$;
@@ -7,7 +8,7 @@
   Router.mountShell("practice");
 
   function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
-  var PAGE = Pager.PAGE, PG = null, OPT = null;
+  var PAGE = Pager.PAGE, PG = null, OPT = null, CUR = "";   // CUR = the chapter code that is open
   var TYPE_LABEL = { mcq: "Choose one", tf: "True / False", fill: "Fill in", short: "Short answer", long: "Long answer", order: "Put in order" };
 
   /* ---- answer checking (same idea as the server: ignore case and spaces, 0.50 = 0.5) ---- */
@@ -21,6 +22,12 @@
   /* ---- one question card ---- */
   function card(q, no) {
     var c = h("article", "card pq");
+    var tried = false, viewed = false, ref = CUR;   // counted once per question
+    function attempt(ok) {   // the FIRST real check of this question; right first time only if the solution was not opened before
+      if (tried) return; tried = true;
+      Activity.note("practice", ref, "attempted");
+      if (ok && !viewed) Activity.note("practice", ref, "rightFirstTime");
+    }
     var chips = h("div", "qcard__chips");
     chips.appendChild(h("span", "chip", "Q" + no));
     chips.appendChild(h("span", "chip chip--" + q.difficulty, q.difficulty));
@@ -55,6 +62,7 @@
         var b = h("button", "opt"); b.type = "button";
         b.appendChild(h("span", "opt__l", o.key)); var t = h("span", "opt__t"); TeX.set(t, o.text); b.appendChild(t);
         b.addEventListener("click", function () {
+          attempt(o.key === q.answer);
           if (o.key === q.answer) { b.classList.add("is-right"); say(true, "Correct! Shabash."); showAnswer(); }
           else { b.classList.add("is-wrong"); b.disabled = true; say(false, "Not this one. Try another option, or open the hint."); }
         });
@@ -66,6 +74,7 @@
       [["true", "True"], ["false", "False"]].forEach(function (p) {
         var b = h("button", "opt"); b.type = "button"; b.textContent = p[1];
         b.addEventListener("click", function () {
+          attempt(p[0] === q.answer);
           if (p[0] === q.answer) { b.classList.add("is-right"); say(true, "Correct! Shabash."); showAnswer(); }
           else { b.classList.add("is-wrong"); b.disabled = true; say(false, "Not this one. Think again."); }
         });
@@ -77,6 +86,7 @@
       var chk = h("button", "btn btn--small", "Check my answer"); chk.type = "button";
       function go() {
         if (!inp.value.trim()) { say(false, "Type your answer first."); return; }
+        attempt(fillOk(q, inp.value));
         if (fillOk(q, inp.value)) { say(true, "Correct! Shabash."); showAnswer(); } else say(false, "Not yet. Look again, or open the hint.");
       }
       chk.addEventListener("click", go); inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); go(); } });
@@ -100,12 +110,13 @@
       back.addEventListener("click", function () { picked.pop(); verdict.hidden = true; draw(); });
       check.addEventListener("click", function () {
         if (picked.length < q.items.length) { say(false, "Tap all the pieces first."); return; }
+        attempt(picked.join("|") === q.answer);
         if (picked.join("|") === q.answer) { say(true, "Correct order! Shabash."); showAnswer(); } else say(false, "Not the right order yet. Tap Undo and try again.");
       });
       act.appendChild(back); act.appendChild(check);
       area.appendChild(slots); area.appendChild(pool); area.appendChild(act); draw();
     } else {   // short / long: the child writes on paper or here, then compares with the answer
-      var ta = h("textarea", "input input--written"); ta.rows = q.type === "long" ? 5 : 3; ta.maxLength = 1500; ta.setAttribute("aria-label", "Your own answer (optional, only for you)"); ta.placeholder = "Write your own answer here (only for you, nothing is saved), then tap “Show answer”.";
+      var ta = h("textarea", "input input--written"); ta.rows = q.type === "long" ? 5 : 3; ta.maxLength = 1500; ta.setAttribute("aria-label", "Your own answer (optional, only for you)"); ta.placeholder = "Write your own answer here (only for you, it is not saved or sent), then tap “Show answer”.";
       area.appendChild(ta);
     }
     c.appendChild(area); c.appendChild(verdict);
@@ -118,7 +129,9 @@
       hb.addEventListener("click", function () { hint.hidden = !hint.hidden; hb.setAttribute("aria-expanded", hint.hidden ? "false" : "true"); });
       bar.appendChild(hb); c.appendChild(bar); c.appendChild(hint);
     } else c.appendChild(bar);
-    var sb = h("button", "btn btn--small btn--ghost", "Show answer & solution"); sb.type = "button"; sb.addEventListener("click", showAnswer); bar.appendChild(sb);
+    var sb = h("button", "btn btn--small btn--ghost", "Show answer & solution"); sb.type = "button";
+    sb.addEventListener("click", function () { if (!viewed) { viewed = true; Activity.note("practice", ref, "solutionsViewed"); } showAnswer(); });   // only the child's own tap counts, not the answer that opens after a right answer
+    bar.appendChild(sb);
     c.appendChild(reveal);
     c.appendChild(Ask.helpButton({ questionId: q.questionId }, ""));
     return c;
@@ -127,6 +140,7 @@
   /* ---- pages ---- */
   function openChapter(ch, topic) {
     if (PG) PG.destroy();
+    CUR = ch.chapterRef;
     $("pick").hidden = true; $("run").hidden = false; UI.clear($("page-msg"));
     $("run-title").textContent = ch.chapter + (topic ? " — " + topic : "");
     PG = Pager.create({
@@ -176,7 +190,7 @@
     });
   }
   $("retry").addEventListener("click", load);
-  $("back").addEventListener("click", function () { if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
+  $("back").addEventListener("click", function () { Activity.flush(false); if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
   var cached = Storage.getProfile(); if (cached) Router.setUser(cached);
   load();
 })();

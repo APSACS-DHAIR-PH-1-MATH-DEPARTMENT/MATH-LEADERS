@@ -22,7 +22,7 @@
   </div>
 
   <div class="card" id="reg-card">
-    <p class="muted">Fill this form once. After the teacher approves it, the <b>Student ID</b> is emailed to you.</p>
+    <p class="muted">This form is for the <b>parent or guardian</b> to fill, once. After the teacher approves it, the <b>Student ID</b> is emailed to you.</p>
     <form id="reg-form" novalidate>
       <label for="studentName">Student's name</label>
       <input class="input" id="studentName" autocomplete="off" maxlength="80">
@@ -40,6 +40,10 @@
       <label for="email2">Type the email address again</label>
       <input class="input" id="email2" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="120">
 
+      <label for="parentPhone">Parent / guardian WhatsApp number</label>
+      <p class="hint">Example: 03001234567. The teacher may use this number to message you on WhatsApp about your child's weekly progress report.</p>
+      <input class="input" id="parentPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20">
+
       <label for="classLevel">Class</label>
       <select class="input" id="classLevel"></select>
 
@@ -51,7 +55,8 @@
         <input id="website" name="website" tabindex="-1" autocomplete="off">
       </div>
 
-      <label class="check"><input type="checkbox" id="consent"> <span>I am the parent/guardian and I agree that the school's Mathematics Department keeps this information to track my child's progress.</span></label>
+      <label class="check"><input type="checkbox" id="consent"> <span>I am the parent/guardian of this student. I agree that the school's Mathematics Department keeps this information and my child's activity on this site (tests, practice and exercises) to track progress, and that a weekly progress report is made for my child. The teacher may message me about it on the WhatsApp number above.</span></label>
+      <p class="hint">Only the school's mathematics teachers and the administrator can see this information. You can ask the teacher at any time to withdraw this consent or to delete your child's data.</p>
 
       <button class="btn" id="reg-btn" type="submit">Register</button>
     </form>

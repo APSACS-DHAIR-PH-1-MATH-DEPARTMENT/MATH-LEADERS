@@ -1,4 +1,5 @@
 /* exercises.js — Exercises & worksheets: pick a chapter, then an exercise or worksheet, then see every question with its written solution.
+   Only a COUNT of the solutions the child opens is saved (activity.js); nothing else.
    A "Video dekho" button appears only on questions that have a video (it plays inside the page, only after a tap).
    Server text is only ever inserted as text (TeX.set for formulas). */
 (function () {
@@ -7,10 +8,11 @@
   Router.mountShell("exercises");
 
   function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
-  var PAGE = Pager.PAGE, PG = null, OPT = null;
+  var PAGE = Pager.PAGE, PG = null, OPT = null, CUR = "";   // CUR = the chapter code that is open
 
   function card(q) {
     var c = h("article", "card pq");
+    var opened = false, ref = CUR;   // a solution counts once per question, the first time it is opened
     var chips = h("div", "qcard__chips");
     chips.appendChild(h("span", "chip", "Q " + q.qNo));
     chips.appendChild(h("span", "chip chip--id", q.exerciseQuestionId));
@@ -24,7 +26,7 @@
 
     var bar = h("div", "actions");
     var sb = h("button", "btn btn--small", "Show solution"); sb.type = "button"; sb.setAttribute("aria-expanded", "false");
-    sb.addEventListener("click", function () { sol.hidden = !sol.hidden; sb.textContent = sol.hidden ? "Show solution" : "Hide solution"; sb.setAttribute("aria-expanded", sol.hidden ? "false" : "true"); });
+    sb.addEventListener("click", function () { sol.hidden = !sol.hidden; if (!sol.hidden && !opened) { opened = true; Activity.note("exercise", ref, "solutionsViewed"); } sb.textContent = sol.hidden ? "Show solution" : "Hide solution"; sb.setAttribute("aria-expanded", sol.hidden ? "false" : "true"); });
     bar.appendChild(sb); c.appendChild(bar); c.appendChild(sol);
     if (q.videoId) c.appendChild(Video.button(q.videoId));
     c.appendChild(Ask.helpButton({ questionId: q.exerciseQuestionId }, ""));
@@ -33,6 +35,7 @@
 
   function open(ch, col) {
     if (PG) PG.destroy();
+    CUR = ch.chapterRef;
     $("pick").hidden = true; $("run").hidden = false; UI.clear($("page-msg"));
     $("run-title").textContent = col.collectionName; $("run-sub").textContent = ch.chapter + " · " + (col.collectionType === "worksheet" ? "Worksheet" : "Exercise");
     PG = Pager.create({
@@ -79,7 +82,7 @@
     });
   }
   $("retry").addEventListener("click", load);
-  $("back").addEventListener("click", function () { if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
+  $("back").addEventListener("click", function () { Activity.flush(false); if (PG) PG.destroy(); PG = null; UI.clear($("page-msg")); $("run").hidden = true; $("pick").hidden = false; $("q-list").textContent = ""; window.scrollTo(0, 0); });
   var cached = Storage.getProfile(); if (cached) Router.setUser(cached);
   load();
 })();
