@@ -479,3 +479,12 @@ body.lightbox-open { overflow: hidden; }
 .dbars__bar { width: 100%; background: var(--ok); border-radius: 6px 6px 0 0; }
 .dbars__lab { font-size: .72rem; color: var(--muted); }
 @media print { .side, .topbar, .acc__head .status, .rep__confirm { display: none !important; } .acc__body[hidden] { display: block !important; } }
+
+/* Step 9.6: order questions whose pieces are long (solution steps written in LaTeX) go one under the other, numbered. */
+.chips2--steps { flex-direction: column; align-items: stretch; }
+.chips2--steps .chipbtn { border-radius: 14px; text-align: left; white-space: normal; font-weight: 600; font-size: 1.05rem; padding: 8px 14px; }
+.slots--steps { flex-direction: column; counter-reset: stepno; }
+.slots--steps .slot { justify-content: flex-start; align-items: center; padding: 2px 10px; min-width: 0; }
+.slots--steps .slot.is-filled { text-align: left; }
+.slots--steps .slot__b { text-align: left; font-weight: 600; white-space: normal; }
+.chipbtn .katex, .slot__b .katex { font-size: 1.05em; }

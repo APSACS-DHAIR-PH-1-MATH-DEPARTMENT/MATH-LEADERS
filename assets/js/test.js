@@ -166,25 +166,26 @@
     var used = {};
     picked.forEach(function (it) { for (var i = 0; i < q.items.length; i++) if (q.items[i] === it && !used[i]) { used[i] = true; break; } });
     box.textContent = "";
-    box.appendChild(h("p", "hint", "Tap the numbers one by one, in the order asked. Tap a number in your answer to take it back."));
-    var pool = h("div", "chips2");
+    box.appendChild(h("p", "hint", "Tap the pieces one by one, in the order asked. Tap a piece in your answer to take it back."));
+    var steps = q.items.some(function (it) { return String(it).length > 22; });   // long pieces (solution steps) go one under the other
+    var pool = h("div", "chips2" + (steps ? " chips2--steps" : ""));
     q.items.forEach(function (it, i) {
-      var b = h("button", "chipbtn chipbtn--big" + (used[i] ? " is-used" : "")); b.type = "button"; b.textContent = it; b.disabled = !!used[i];
+      var b = h("button", "chipbtn chipbtn--big" + (used[i] ? " is-used" : "")); b.type = "button"; TeX.set(b, it); b.disabled = !!used[i];   /* pieces may be formulas (solution steps): drawn by KaTeX, still only as text */
       b.addEventListener("click", function () { setAnswer(q, picked.concat([it])); renderOrder(q, box); });
       pool.appendChild(b);
     });
     box.appendChild(pool);
     box.appendChild(h("div", "label", "Your order"));
-    var slots = h("ol", "slots");
+    var slots = h("ol", "slots" + (steps ? " slots--steps" : ""));
     for (var k = 0; k < q.items.length; k++) {
       var li = h("li", "slot" + (picked[k] !== undefined ? " is-filled" : ""));
       if (picked[k] !== undefined) {
         (function (idx) {
-          var b = h("button", "slot__b"); b.type = "button"; b.textContent = picked[idx]; b.setAttribute("aria-label", "Remove " + picked[idx]);
+          var b = h("button", "slot__b"); b.type = "button"; TeX.set(b, picked[idx]); b.setAttribute("aria-label", "Remove piece " + (idx + 1) + " from your answer");
           b.addEventListener("click", function () { var next = picked.slice(); next.splice(idx, 1); setAnswer(q, next); renderOrder(q, box); });
           li.appendChild(b);
         })(k);
-      } else { li.textContent = "—"; }
+      } else { li.textContent = steps ? String(k + 1) : "—"; }
       slots.appendChild(li);
     }
     box.appendChild(slots);

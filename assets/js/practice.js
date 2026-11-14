@@ -92,7 +92,8 @@
       chk.addEventListener("click", go); inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); go(); } });
       area.appendChild(inp); var w = h("div", "actions"); w.appendChild(chk); area.appendChild(w);
     } else if (q.type === "order") {
-      var picked = [], slots = h("ol", "slots"), pool = h("div", "chips2"), act = h("div", "actions");
+      var steps = q.items.some(function (it) { return String(it).length > 22; });   // long pieces (solution steps) go one under the other
+      var picked = [], slots = h("ol", "slots" + (steps ? " slots--steps" : "")), pool = h("div", "chips2" + (steps ? " chips2--steps" : "")), act = h("div", "actions");
       var back = h("button", "btn btn--small btn--ghost", "Undo"); back.type = "button";
       var check = h("button", "btn btn--small", "Check order"); check.type = "button";
       function draw() {
