@@ -188,12 +188,19 @@
     add(box, end, lbl, ta, hint, btn, msg);
 
     function enable() { btn.disabled = false; hint.textContent = "You have reached the end. Press the button when you and your parent have read the report."; }
+    /* Reached = the end marker has been on screen OR is already above the screen. Watching only "has it been on screen" misses a child who jumps
+       straight to the bottom of the page (End key, dragging the scroll bar): now that a card sits under the report, the marker can be skipped in
+       one jump and the button would never wake up. The scroll check covers that; the observer covers a short report where the marker is on screen at once. */
+    var done = false;
+    function ready() { if (done) return; done = true; window.removeEventListener("scroll", passed); window.removeEventListener("resize", passed); enable(); }
+    function passed() { if (document.body.contains(end) && end.getBoundingClientRect().top < (window.innerHeight || document.documentElement.clientHeight)) ready(); }
     if (typeof IntersectionObserver === "function") {
       var obs = new IntersectionObserver(function (entries) {
-        for (var i = 0; i < entries.length; i++) if (entries[i].isIntersecting) { enable(); obs.disconnect(); return; }
+        for (var i = 0; i < entries.length; i++) if (entries[i].isIntersecting) { obs.disconnect(); ready(); return; }
       });
       obs.observe(end);
-    } else { enable(); }
+      window.addEventListener("scroll", passed, { passive: true }); window.addEventListener("resize", passed);
+    } else { ready(); }
 
     btn.addEventListener("click", function () {
       UI.clear(msg); UI.busy(btn, true, "Saving…");
